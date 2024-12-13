@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="dopinf" xmlns="dopinf" xmlns:atr="atr" xmlns:objtyp="objtyp"
+  xmlns:gml="http://www.opengis.net/gml/3.2">
+  <xs:import schemaLocation="../common/atributy.xsd" namespace="atr"/>
+  <xs:import schemaLocation="../ext/gml/gml.xsd" namespace="http://www.opengis.net/gml/3.2"/>
+
+    <xs:element name="DoprovodneInformace">
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="UdajeOZmenach" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="ZaznamZmeny" maxOccurs="unbounded" minOccurs="0"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="UdajeOVlastnicichSpravcichProvozovatelich" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="ZaznamVSP" maxOccurs="unbounded" minOccurs="0"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="IdentifikacniCislaStaveb" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="ZaznamICS" maxOccurs="unbounded" minOccurs="0"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="OblastiKompletniZPS" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Oblasti se zaplochovanou ZPS</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="ZaznamZPS" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+<!-- zrušeno v JVF 1.4.3
+        <xs:element name="OblastiZamku" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Oblasti pro uzamknutí DTM před jinou (souběžnou) editací.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="ZaznamZamku" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+-->
+          <xs:element name="UdajeOVydeji" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>=Udaje o výdeji datové sady</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element ref="DatumPlatnosti"/>
+                <xs:element ref="TypDatoveSady"/>
+                <xs:element ref="PopisDatoveSady" minOccurs="0"/>
+                <xs:element ref="ObvodDatoveSady" minOccurs="0"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DatumPlatnosti" type="xs:dateTime">
+      <xs:annotation>
+        <xs:documentation>Soubor obsahuje data DTM platná k tomuto datumu</xs:documentation>
+      </xs:annotation>
+    </xs:element>
+
+  <xs:element name="TypDatoveSady">
+    <xs:annotation>
+      <xs:documentation>Určení typu datové sady</xs:documentation>
+    </xs:annotation>
+    <xs:simpleType>
+      <xs:restriction base="xs:integer">
+        <xs:enumeration value="1">
+          <xs:annotation>
+            <xs:documentation>ZPS - podrobné body</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="2">
+          <xs:annotation>
+            <xs:documentation>ZPS - odvozené plošné typy objektů</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="3">
+          <xs:annotation>
+            <xs:documentation>ZPS s výjimkou podrobných bodů a odvozených plošných typů objektů a včetně konstrukčních objektů</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="4">
+          <xs:annotation>
+            <xs:documentation>doprovodné informace k území</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="5">
+          <xs:annotation>
+            <xs:documentation>TI - veřejná část a doprovodné informace k území</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="6">
+          <xs:annotation>
+            <xs:documentation>TI - veřejná i neveřejná část (kompletní výpis) a doprovodné informace k území</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="7">
+          <xs:annotation>
+            <xs:documentation>DI - veřejná část a doprovodné informace k území</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="8">
+          <xs:annotation>
+            <xs:documentation>DI - veřejná i neveřejná část (kompletní výpis) a doprovodné informace k území</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="9">
+          <xs:annotation>
+            <xs:documentation>ZPS - kompletní výpis a doprovodné informace k území (pouze pro ad hoc výdej)</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="10">
+          <xs:annotation>
+            <xs:documentation>Výdej vlastních dat VSP</xs:documentation>
+          </xs:annotation>
+        </xs:enumeration>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  
+  <xs:element name="PopisDatoveSady" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>Volitelný popis datové sady (např. název obce)</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  
+  <xs:element name="ObvodDatoveSady">
+    <xs:annotation>
+      <xs:documentation>Volitelný obvod datové dasy (např. pro ad hoc výdeje)</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="gml:Polygon"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ZaznamZmeny">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="atr:IDPodani" minOccurs="0"/>
+        <xs:element ref="atr:IDZmenyZpracovatele" minOccurs="0"/>
+        <xs:element ref="atr:PopisObjektu" minOccurs="0"/>
+        <xs:element ref="atr:IDEditora" minOccurs="0"/>
+        <xs:element ref="atr:DatumVkladu" minOccurs="0"/>
+        <xs:element ref="atr:VkladOsoba" minOccurs="0"/>
+        <xs:element ref="NazevZakazky"/>
+        <xs:element ref="CisloStavbyZakazky" minOccurs="0"/>
+        <xs:element ref="PartnerInvestor" minOccurs="0"/>
+        <xs:element ref="Zpracovatel"/>
+        <xs:element ref="OrganizaceZpracovatele"/>
+        <xs:element ref="DatumMereni"/>
+        <xs:element ref="DatumZpracovani"/>
+        <xs:element ref="AZI" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Číslo oprávnění autorizovaného zeměměřického inženýra (dříve ÚOZI)</xs:documentation>
+            <xs:documentation>Povinný pro geodetickou aktualizační dokumentaci (GAD), nepovinný pro krajskou aktualizační dokumentaci (KAD)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="DatumOvereni" minOccurs="0"/>
+        <xs:element ref="CisloOvereni" minOccurs="0"/>
+        <xs:element ref="OblastZmeny"/>
+        <xs:element ref="Konsolidace" minOccurs="0"/>
+      </xs:all>
+      </xs:complexType>
+    </xs:element>
+
+  <xs:element name="ZaznamVSP">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="IDVSP">
+          <xs:annotation>
+            <xs:documentation>ID subjektu VSP v IS DMVS</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="NazevVSP"/>
+        <xs:element ref="IdentifikacniCisloVSP" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>IČO VSP</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ZaznamICS">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="ICS"/>
+        <xs:element name="ObjektyDTM">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="IDZaznamuObjektuDTM" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>  
+  <xs:element name="NazevZakazky" type="xs:string"/>
+  <xs:element name="CisloStavbyZakazky" type="xs:string"/>
+  <xs:element name="PartnerInvestor" type="xs:string"/>
+  <xs:element name="Zpracovatel" type="xs:string"/>
+  <xs:element name="OrganizaceZpracovatele" type="xs:string"/>
+  <xs:element name="DatumMereni" type="xs:date"/>
+  <xs:element name="DatumZpracovani" type="xs:date"/>
+  <xs:element name="AZI" type="xs:string"/>
+  <xs:element name="DatumOvereni" type="xs:date"/>
+  <xs:element name="CisloOvereni" type="xs:string"/>
+  <xs:element name="OblastZmeny">
+    <xs:annotation>
+      <xs:documentation>Vymezení oblasti, uvnitř níž se nacházejí všechny objekty změny</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="gml:surfaceProperty"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Konsolidace" type="xs:boolean">
+    <xs:annotation>
+      <xs:documentation>Jedná se o prvotní import dat v rámci projektů DTM1?</xs:documentation>
+      <xs:documentation>1 = ano, 0 = ne</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ZaznamZPS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="AtributyObjektu">
+          <xs:complexType>
+            <xs:all>
+              <xs:element ref="atr:SpolecneAtributyVsechObjektu"/>
+              <xs:element ref="atr:SpolecneAtributyObjektuZPS"/>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="GeometrieObjektu">
+          <xs:annotation>
+            <xs:documentation>Oblasti mohou obsahovat otvory</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PlochaZPS" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="gml:surfaceProperty"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ObvodZPS" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Pokud je v oblasti otvor, je první křivka vnější hranice oblasti, další křivky jsou hranice otvorů</xs:documentation>
+              </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="gml:MultiCurve"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="DefBodZPS" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="gml:pointProperty"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+<!-- zrušeno v JVF 1.4.3
+  <xs:element name="ZaznamZamku">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="atr:ID"/>
+        <xs:element ref="atr:IDZmeny"/>
+        <xs:element ref="atr:PopisObjektu" minOccurs="0"/>
+        <xs:element ref="atr:IDEditora"/>
+        <xs:element ref="atr:DatumVkladu"/>
+        <xs:element ref="atr:VkladOsoba"/>
+        <xs:element name="OblastZamku">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="gml:surfaceProperty"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+-->
+  <xs:element name="IDVSP" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>Identifikátor subjektu v IS DMVS (vlastník, správce, provozovatel)</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="NazevVSP" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>Název subjektu v IS DMVS (vlastník, správce, provozovatel)</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="IdentifikacniCisloVSP" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>IČO subjektu v IS DMVS (vlastník, správce, provozovatel)</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="ICS" type="xs:string"/>
+  <xs:element name="IDZaznamuObjektuDTM" type="xs:string"/>
+</xs:schema>

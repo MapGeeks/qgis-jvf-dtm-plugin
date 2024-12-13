@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  xmlns:atr="atr" xmlns:cmn="cmn" xmlns:gml="http://www.opengis.net/gml/3.2" targetNamespace="o6" xmlns:o6="o6">
+  <xs:import schemaLocation="../common/atributy.xsd" namespace="atr"/>
+  <xs:import schemaLocation="../common/common.xsd" namespace="cmn"/>
+  <xs:import schemaLocation="../ext/gml/gml.xsd"
+    namespace="http://www.opengis.net/gml/3.2"/>
+  <xs:element name="O6" type="o6:O6Type"/>
+  <xs:complexType name="O6Type">
+    <xs:sequence>
+      <xs:element name="ObjektovyTypNazev" type="xs:string" fixed="o6" >
+        <xs:annotation>
+          <xs:documentation>Objekt podle §4b odst. 6 zákona č. 200/1994 Sb. o zeměměřictví, ve znění pozdějších předpisů</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:sequence>
+        <xs:element name="ZaznamyObjektu">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ZaznamObjektu" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="cmn:ZapisObjektu"/>
+                    <xs:element name="AtributyObjektu">
+                      <xs:complexType>
+                        <xs:all>
+                          <xs:element ref="atr:SpolecneAtributyVsechObjektu"/>
+                          <xs:element ref="atr:IDVlastnika" minOccurs="0"/>
+                          <xs:element ref="atr:IDProvozovateleZeZakona" minOccurs="0"/>
+                          <xs:element ref="atr:IDSpravce" minOccurs="0"/>
+                          <xs:element ref="atr:IDProvozovatele" minOccurs="0"/>
+                          <xs:element ref="atr:IDExterni" minOccurs="0"/>
+                          <xs:element ref="atr:NeuplnaData"/>
+                          <xs:element ref="atr:TridaPresnostiPoloha"/>
+                          <xs:element ref="atr:EvidencniCisloObjektu" minOccurs="0"/>
+                        </xs:all>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="GeometrieObjektu">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element ref="gml:surfaceProperty"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

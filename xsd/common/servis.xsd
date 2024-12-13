@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="servis" xmlns="servis">
+  <xs:element name="ServisJVFDTM">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="RelaceIDObjektu" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Vztah mezi ID objektů u VSP a v DTMK</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="VerzeRelace" type="xs:string" fixed="1.0"/>
+              <xs:element name="DatumRelace" type="xs:date"/>
+              <xs:element name="IDRelace" type="xs:string" minOccurs="0"/>
+              <xs:element name="SeznamIDObjektu">
+                <xs:annotation>
+                  <xs:documentation>Seznam dvojic ID objektů</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="IDObjektu" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:all>
+                          <xs:element name="IDExterni" type="xs:string"/>
+                          <xs:element name="ID" type="xs:string"/>
+                        </xs:all>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="RelaceIDObjektuZPS" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Vztah mezi ID objektů u přeshraniční editace ZPS</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="VerzeRelaceZPS" type="xs:string" fixed="1.0"/>
+              <xs:element name="DatumRelaceZPS" type="xs:date"/>
+              <xs:element name="IDPozadavku" type="xs:string" minOccurs="0"/>
+              <xs:element name="SeznamIDObjektuZPS">
+                <xs:annotation>
+                  <xs:documentation>Seznam dvojic ID objektů u přeshraniční editace ZPS</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="IDObjektuZPS" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:all>
+                          <xs:element name="IDDocasne" type="xs:string"/>
+                          <xs:element name="ID" type="xs:string"/>
+                        </xs:all>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+ 

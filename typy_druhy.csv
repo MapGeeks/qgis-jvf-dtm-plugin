@@ -1,0 +1,73 @@
+004 osa pozemní komunikace|KategoriePozemniKomunikace
+020 osa železniční tratě|KategorieZeleznicniTrate
+026 osa tramvajové dráhy|TypDrahy
+027 osa koleje tramvajové dráhy|RozchodKoleji
+037 osa speciální dráhy|TypDrahy
+038 osa koleje speciální dráhy|RozchodKoleji
+040 dopravně významné místo na dráze|TypDopravneVyznamnehoMistaDraze
+043 sledovaná vodní cesta|TypSledovaneVodniCesty
+045 vodní část přístavu|TypPristavu
+046 vzletová a přistávací dráha|TypPovrchuVzletovePristavaciDrahy
+047 letiště|DruhLetiste
+049 letecká stavba|TypLeteckeStavby
+050 zařízení pro letecký provoz|TypZarizeniProLeteckyProvoz
+072 nádrž, zdrž se vzdouvacím objektem|TypNadrzeZdrzeSeVzdouvacimObjektem
+076 stupeň|TypVodnihoDila
+080 meliorační příkop, žlab|DruhMelioracnichOpatreni
+085 protipovodňová zábrana|TypProtipovodnoveZabrany
+092 technický kanál|TypTechnickehoKanalu
+093 sdílený objekt TI|TypSdilenehoObjektuTI
+095 podpěrné zařízení|TypPodpernehoZarizeni
+098 trasa elektrické sítě|MaximalniNapetovaHladina
+099 trasa místní elektrické sítě|TypTrasyMistniElektrickeSite
+101 zařízení elektrické sítě|TypZarizeniElektrickeSite
+102 výrobna elektřiny|TypVyrobnyElektriny
+103 stanice elektrické sítě|MaximalniNapetovaHladina
+104 jaderné zařízení|TypJadernehoZarizeni
+105 trasa sítě EK|MaterialTrasySiteEK
+107 zařízení sítě EK|TypZarizeniSiteEK
+108 technologický objekt sítě EK|TypTechnologickehoObjektuSiteEK
+109 trasa plynovodní sítě|TlakovaHladinaPlynovodniSite
+111 zařízení plynovodní sítě|TypZarizeniPlynovodniSite
+112 technologický objekt plynovodní sítě|TlakovaHladinaPlynovodniSite
+113 trasa vodovodní sítě|TypTrasyVodovodniSite
+116 zařízení vodovodní přípojky|TypZarizeniVodovodniPripojky
+121 trasa stokové sítě|UceloveZarazeniStokoveSite;TypTrasyStokoveSite
+124 zařízení kanalizační přípojky|TypZarizeniKanalizacniPripojky
+128 zařízení sítě produktovodu|TypZarizeniSiteProduktovodu
+130 trasa teplovodní sítě|TypTrasyTeplovodniSite
+131 zařízení teplovodní sítě|TypZarizeniTeplovodniSite
+132 technologický objekt teplovodní sítě|TypTechnologickehoObjektuTeplovodniSite
+134 zařízení potrubní pošty|TypZarizeniPotrubniPosty
+135 povrchový znak TI|TypPovrchovehoZnakuTI
+138 zařízení protikorozní ochrany|TypPKO
+137 trasa protikorozní ochrany|TypPKO
+139 jiné zařízení staveb TI|TypJinehoZarizeniStavebTI
+148 skládka odpadů|StavSkladkyOdpadu
+150 jiné zařízení na odstraňování|TypZarizeniOdstranovaniOdpadu
+154 drobná sakrální stavba|TypDrobneSakralniStavby
+159 drobná kulturní stavba|TypDrobneKulturniStavby
+162 plot|DruhPlotu
+166 schodiště|DruhSchodiste
+168 zeď|TypZdi
+191 vrt|TypVrtu
+201 nosič technického zařízení|TypNosiceTechnickehoZarizeni
+207 zemědělská plocha|TypZemedelskePlochy
+215 udržovaná plocha zeleně|TypUdrzovaneZelene
+217 terénní hrana|TypTerenniHrany
+304 hranice dopravní stavby nebo plochy|TypDopravniStavbyNeboPlochy
+305 hranice přírodního a polopřírodního objektu|TypPrirodnihoPoloprirodnihoObjektu
+306 hranice vodního díla|TypVodnihoDila
+307 hranice ostatní plochy|TypOstatniPlochy
+330 nádrž, zdrž bez vzdouvacího objektu|TypNadrzeBezVzdouvacihoObjektu
+336 objekt vodovodní sítě|TypObjektuVodovodniSite
+337 objekt stokové sítě|TypObjektuStokoveSite
+339 silniční doprava – koridor záměru|TypObjektuSilnicniDopravyZameru
+340 silniční doprava – místo záměru|TypObjektuSilnicniDopravyZameru
+350 elektrická síť – koridor záměru|MaximalniNapetovaHladina
+351 elektrická síť – místo záměru|TypObjektuElektrickeSiteZameru
+354 plynovod – koridor záměru|TlakovaHladinaPlynovodniSite
+355 plynovod – místo záměru|TypObjektuPlynovodniSiteZameru
+357 vodovod – místo záměru|TypObjektuVodovodniSiteZameru
+359 kanalizace – místo záměru|TypObjektuStokoveSiteZameru
+364 odpadové hospodářství – záměr|TypObjektuOdpadovehoHospodarstviZameru

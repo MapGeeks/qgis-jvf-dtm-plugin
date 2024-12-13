@@ -1,0 +1,1 @@
+Stáhněte prosím jako zip a nainstalujte do QGISu.

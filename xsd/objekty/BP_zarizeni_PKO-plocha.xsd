@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  xmlns:atr="atr" xmlns:cmn="cmn" xmlns:gml="http://www.opengis.net/gml/3.2" targetNamespace="bpzpko" xmlns:bpzpko="bpzpko">
+  <xs:import schemaLocation="../common/atributy.xsd" namespace="atr"/>
+  <xs:import schemaLocation="../common/common.xsd" namespace="cmn"/>
+  <xs:import schemaLocation="../ext/gml/gml.xsd"
+    namespace="http://www.opengis.net/gml/3.2"/>
+  <xs:element name="BPZarizeniPKO" type="bpzpko:BPZarizeniPKOType"/>
+  <xs:complexType name="BPZarizeniPKOType">
+    <xs:sequence>
+      <xs:element name="ObjektovyTypNazev" fixed="bezpečnostní pásmo zařízení PKO">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="code_base" type="xs:string" fixed="0100000291" use="required"/>
+              <xs:attribute name="code_suffix" type="xs:string" fixed="03" use="required"/>    
+            </xs:extension> 
+          </xs:simpleContent> 
+        </xs:complexType>
+      </xs:element>
+      <xs:sequence>
+        <xs:element name="KategorieObjektu" type="xs:string" fixed="Ochranná a bezpečnostní pásma">
+          <xs:annotation>
+            <xs:documentation>Kategorie objektu dle Vyhlášky o DTM kraje</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="SkupinaObjektu" type="xs:string" fixed="Ochranné a bezpečnostní pásmo">
+          <xs:annotation>
+            <xs:documentation>Skupina objektu dle Vyhlášky o DTM kraje</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ObsahovaCast" type="xs:string" fixed="TI">
+          <xs:annotation>
+            <xs:documentation>Zařazení objektu do obsahové části dle Vyhlášky o DTM kraje</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ZaznamyObjektu">
+          <xs:annotation>
+            <xs:documentation>Jednotlivé záznamy daného objektu</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ZaznamObjektu" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="cmn:ZapisObjektu"/>
+                    <xs:element name="AtributyObjektu">
+                      <xs:complexType>
+                        <xs:all>
+                          <xs:element ref="atr:SpolecneAtributyVsechObjektu"/>
+                          <xs:element ref="atr:SpolecneAtributyObjektuPasemTI"/>
+                        </xs:all>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="GeometrieObjektu" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element ref="gml:surfaceProperty"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element ref="atr:OblastObjektuKI" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

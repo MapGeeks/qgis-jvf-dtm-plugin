@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="ext" xmlns="ext">
+  <xs:element name="ExtenzeJVFDTM">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="NazevExtenze" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Název extenze</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="SpravceExtenze" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Správce extenze (subjekt, který extenzi zavedl a spravuje)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="VerzeExtenze" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Verze extenze</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="DataExtenze">
+          <xs:annotation>
+            <xs:documentation>Data extenze</xs:documentation>
+          </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:any maxOccurs="unbounded" processContents="lax"/>
+              </xs:sequence>
+            </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

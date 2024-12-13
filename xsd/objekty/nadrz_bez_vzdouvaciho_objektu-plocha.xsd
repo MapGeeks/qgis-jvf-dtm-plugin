@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  xmlns:atr="atr" xmlns:cmn="cmn" xmlns:gml="http://www.opengis.net/gml/3.2" targetNamespace="nbvpol" xmlns:nbvpol="nbvpol">
+  <xs:import schemaLocation="../common/atributy.xsd" namespace="atr"/>
+  <xs:import schemaLocation="../common/common.xsd" namespace="cmn"/>
+  <xs:import schemaLocation="../ext/gml/gml.xsd"
+    namespace="http://www.opengis.net/gml/3.2"/>
+  <xs:element name="NadrzBezVzdouvacihoObjektuPlocha" type="nbvpol:NadrzBezVzdouvacihoObjektuPlochaType"/>
+  <xs:complexType name="NadrzBezVzdouvacihoObjektuPlochaType">
+    <xs:sequence>
+      <xs:element name="ObjektovyTypNazev" fixed="nádrž bez vzdouvacího objektu">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="code_base" type="xs:string" fixed="0100000330" use="required"/>
+              <xs:attribute name="code_suffix" type="xs:string" fixed="03" use="required"/>    
+            </xs:extension> 
+          </xs:simpleContent> 
+        </xs:complexType>
+      </xs:element>
+      <xs:sequence>
+        <xs:element name="KategorieObjektu" type="xs:string" fixed="Vodní díla">
+          <xs:annotation>
+            <xs:documentation>Kategorie objektu dle Vyhlášky o DTM kraje</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="SkupinaObjektu" type="xs:string" fixed="Nádrž">
+          <xs:annotation>
+            <xs:documentation>Skupina objektu dle Vyhlášky o DTM kraje</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ObsahovaCast" type="xs:string" fixed="ZPS">
+          <xs:annotation>
+            <xs:documentation>Zařazení objektu do obsahové části dle Vyhlášky o DTM kraje</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ZaznamyObjektu">
+          <xs:annotation>
+            <xs:documentation>Jednotlivé záznamy daného objektu</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ZaznamObjektu" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="cmn:ZapisObjektu"/>
+                    <xs:element name="AtributyObjektu">
+                      <xs:complexType>
+                        <xs:all>
+                          <xs:element ref="atr:SpolecneAtributyVsechObjektu"/>
+                          <xs:element ref="atr:SpolecneAtributyObjektuZPS"/>
+                          <xs:element ref="atr:TypNadrzeBezVzdouvacihoObjektu"/>
+                        </xs:all>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="GeometrieObjektu">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element ref="gml:surfaceProperty">
+                            <xs:annotation>
+                              <xs:documentation>2D geometrie pro plochu</xs:documentation>
+                            </xs:annotation>
+                          </xs:element>
+                          <xs:element ref="gml:multiCurveProperty">
+                            <xs:annotation>
+                              <xs:documentation>3D geometrie pro obvod</xs:documentation>
+                            </xs:annotation>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  xmlns:atr="atr" xmlns:cmn="cmn" xmlns:gml="http://www.opengis.net/gml/3.2" targetNamespace="voklin" xmlns:voklin="voklin">
+  <xs:import schemaLocation="../common/atributy.xsd" namespace="atr"/>
+  <xs:import schemaLocation="../common/common.xsd" namespace="cmn"/>
+  <xs:import schemaLocation="../ext/gml/gml.xsd"
+    namespace="http://www.opengis.net/gml/3.2"/>
+  <xs:element name="VodovodKoridorZameruLinie" type="voklin:VodovodKoridorZameruLinieType"/>
+  <xs:complexType name="VodovodKoridorZameruLinieType">
+    <xs:sequence>
+      <xs:element name="ObjektovyTypNazev" fixed="vodovod – koridor záměru">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="code_base" type="xs:string" fixed="0100000356" use="required"/>
+              <xs:attribute name="code_suffix" type="xs:string" fixed="02" use="required"/>    
+            </xs:extension> 
+          </xs:simpleContent> 
+        </xs:complexType>
+      </xs:element>
+      <xs:sequence>
+        <xs:element name="KategorieObjektu" type="xs:string" fixed="Záměry na provedení změn dopravní a technické infrastruktury">
+          <xs:annotation>
+            <xs:documentation>Kategorie objektu dle Vyhlášky o DTM kraje</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="SkupinaObjektu" type="xs:string" fixed="Záměr na provedení změn dopravní a technické infrastruktury">
+          <xs:annotation>
+            <xs:documentation>Skupina objektu dle Vyhlášky o DTM kraje</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ObsahovaCast" type="xs:string" fixed="TI">
+          <xs:annotation>
+            <xs:documentation>Zařazení objektu do obsahové části dle Vyhlášky o DTM kraje</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ZaznamyObjektu">
+          <xs:annotation>
+            <xs:documentation>Jednotlivé záznamy daného objektu</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ZaznamObjektu" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="cmn:ZapisObjektu"/>
+                    <xs:element name="AtributyObjektu">
+                      <xs:complexType>
+                        <xs:all>
+                          <xs:element ref="atr:SpolecneAtributyVsechObjektu"/>
+                          <xs:element ref="atr:SpolecneAtributyObjektuZameru"/>
+                        </xs:all>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="GeometrieObjektu">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element ref="gml:curveProperty"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
