@@ -266,7 +266,7 @@ class CzechDTMParser:
             try:
                 processed_count += self._process_single_record(record, obj_type, code_num, type_features)
             except Exception as e:
-                logger.error(f"Error processing record: {e}")
+                print(f"Error processing record: {e}")
                 continue
             
         #print(f"Found {len(type_features)} different types:")
@@ -280,6 +280,7 @@ class CzechDTMParser:
                              code_num: str, type_features: dict) -> int:
         """Zpracování jednotlivého záznamu"""
         # Získání typu a atributů
+        
         attributes = record.find("x:AtributyObjektu", self.ns)
         record_type, tag_name = self._determine_record_type(attributes, code_num, obj_type.text)
 
@@ -299,22 +300,23 @@ class CzechDTMParser:
 
         tag_name = None
         record_type = None
-
         mapping_row = self.type_mapping_df[self.type_mapping_df['code'] == f"{code_num} {obj_type_text}"]
+        
         if not mapping_row.empty:
             expected_attributes = mapping_row.iloc[0]['attributes']
             for expected_attribute in expected_attributes:
                 for child in attributes:
                     current_tag = child.tag.split('}')[-1]
                     
-                    if current_tag == expected_attribute and child.text != '0':
+                    if current_tag == expected_attribute :
+                    #and child.text != '0':
                         if record_type is None:
                             record_type = self.value_mappings[current_tag][child.text]
                             tag_name = current_tag
                         else:
                             record_type = f"{record_type} {self.value_mappings[current_tag][child.text]}"
                         break
-
+        
         return record_type, tag_name
 
     def _store_geometries(self, geom_list: List[Tuple[QgsGeometry, str, str]], 
@@ -371,9 +373,11 @@ class CzechDTMParser:
         #print(f"\nCreating layers for {len(type_features)} types")
 
         for type_key, data in type_features.items():
+        
+            #print(f"{type_key} {data['tag_name']} {data['type_value']}")
+
             """
             print(f"\nProcessing type: {type_key}")
-            print(f"Tag name: {data['tag_name']}")
             print(f"Type value: {data['type_value']}")
             print(f"Geom type: {data['geom_type']}")
             """
@@ -532,18 +536,24 @@ class CzechDTMParser:
         code_num = obj_type.get('code_base')[7:]
         base_name = f"{code_num} {obj_type.text}"
         
-        if tag_name and type_value and tag_name in self.value_mappings:
+        if tag_name and type_value and tag_name in self.value_mappings and type_value != "neveřejný údaj":
             return f"{base_name} - {type_value}"
-        
+       # print(f"{tag_name}")
         # Zkusíme najít výchozí typ pro tento objekt
         default_type = None
+        
+        
         if tag_name in self.value_mappings:
+            #print("tag_name in self.value_mappings")
             # Hledáme výchozí hodnotu (často '0' nebo podobné)
             default_mapping = self.value_mappings.get(tag_name, {})
-            if '0' in default_mapping:
+            if '0' in default_mapping and default_mapping['0'] != "neveřejný údaj":
                 default_type = default_mapping['0']
-            elif '99' in default_mapping:  # někdy se používá 99 pro výchozí hodnotu
-                default_type = default_mapping['99']
+            else :
+                if '98' in default_mapping:  # někdy se používá 99 pro výchozí hodnotu nezjištěno/neurčeno
+                    default_type = default_mapping['98']
+                elif '99' in default_mapping:  # někdy se používá 98 pro výchozí hodnotu jiné
+                    default_type = default_mapping['99']
         
         if default_type:
             return f"{base_name} - {default_type}"

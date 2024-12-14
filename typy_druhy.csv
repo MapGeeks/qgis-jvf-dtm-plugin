@@ -35,13 +35,13 @@
 121 trasa stokové sítě|UceloveZarazeniStokoveSite;TypTrasyStokoveSite
 124 zařízení kanalizační přípojky|TypZarizeniKanalizacniPripojky
 128 zařízení sítě produktovodu|TypZarizeniSiteProduktovodu
-130 trasa teplovodní sítě|TypTrasyTeplovodniSite
+130 trasa teplovodní sítě|TypTeplovodniSite;TypTrasyTeplovodniSite
 131 zařízení teplovodní sítě|TypZarizeniTeplovodniSite
 132 technologický objekt teplovodní sítě|TypTechnologickehoObjektuTeplovodniSite
 134 zařízení potrubní pošty|TypZarizeniPotrubniPosty
 135 povrchový znak TI|TypPovrchovehoZnakuTI
-138 zařízení protikorozní ochrany|TypPKO
-137 trasa protikorozní ochrany|TypPKO
+138 zařízení protikorozní ochrany|TypInzenyrskeSitePKO
+137 trasa protikorozní ochrany|TypInzenyrskeSitePKO
 139 jiné zařízení staveb TI|TypJinehoZarizeniStavebTI
 148 skládka odpadů|StavSkladkyOdpadu
 150 jiné zařízení na odstraňování|TypZarizeniOdstranovaniOdpadu
