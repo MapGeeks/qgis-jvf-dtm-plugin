@@ -1,116 +1,129 @@
-# gml_viewer.py
-from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox
-from qgis.PyQt.QtGui import QIcon,QColor 
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt,QVariant
-from qgis.core import (QgsVectorLayer, QgsFeature, QgsGeometry, QgsField, QgsRuleBasedRenderer,QgsSingleSymbolRenderer,QgsCategorizedSymbolRenderer, QgsGraduatedSymbolRenderer,
-                      QgsProject, QgsCoordinateTransformContext,  QgsVectorFileWriter, QgsCoordinateReferenceSystem, QgsCoordinateTransform)
-import os.path
-import subprocess
+"""
+@brief Plugin Implementation of Czech DTM QGIS Viewer
+
+Classes:
+ - GMLViewer
+
+(C) 2024-2025 by MapGeeks
+@author Petr Barandovski petr.barandovski@gmail.com
+@author Linda Karlovska linda.karlovska@seznam.cz
+
+This plugin is free under the MIT License.
+"""
+
+from pathlib import Path
+from typing import Optional
+
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox, QWidget
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
+
 from .czech_dtm_parser import CzechDTMParser
-                        
+
+
 class GMLViewer:
     """QGIS Plugin Implementation."""
-    
+
     def __init__(self, iface):
         """Constructor."""
         # Save reference to the QGIS interface
         self.iface = iface
-        
-        # initialize plugin directory
-        self.plugin_dir = os.path.dirname(__file__)
-        
-        # initialize locale
-        self.locale = QSettings().value('locale/userLocale', '')
-        if self.locale:
-            # Get first two letters of locale if it exists
-            self.locale = self.locale[0:2]
-        else:
-            # If locale not set, default to 'en'
-            self.locale = 'en'
-            
-        locale_path = os.path.join(
-            self.plugin_dir,
-            'i18n',
-            f'GMLViewer_{self.locale}.qm')
 
-        if os.path.exists(locale_path):
-            self.translator = QTranslator()
-            self.translator.load(locale_path)
-            QCoreApplication.installTranslator(self.translator)
+        # Initialize plugin directory and locale
+        self.plugin_dir = Path(__file__).parent
+        self.locale = self._get_locale()
+
+        # Load translations if available
+        self._load_translations()
 
         # Declare instance attributes
         self.actions = []
-        self.menu = 'JVF DTM Viewer'
-        
+        self.menu = "JVF DTM Viewer"
+
         # Check if plugin was started the first time in current QGIS session
         self.first_start = None
-        
+
         # Initialize parser
-        
         self.parser = CzechDTMParser(self.iface)
 
-    def add_action(self, icon_path, text, callback, enabled_flag=True,
-                  add_to_menu=True, add_to_toolbar=True, status_tip=None,
-                  whats_this=None, parent=None):
+    def _get_locale(self) -> str:
+        """Retrieve the user's locale setting or default to 'en'."""
+        locale = QSettings().value("locale/userLocale", "")
+        return locale[:2] if locale else "en"
+
+    def _load_translations(self) -> None:
+        """Load and install translations based on locale."""
+        locale_path = self.plugin_dir / "i18n" / f"GMLViewer_{self.locale}.qm"
+        if locale_path.exists():
+            translator = QTranslator()
+            translator.load(str(locale_path))
+            QCoreApplication.installTranslator(translator)
+
+    @staticmethod
+    def _show_message_box(message: str, success: bool) -> None:
+        """Display a message box with the given message and icon."""
+        msg_box = QMessageBox()
+        msg_box.setText(message)
+        msg_box.setIcon(QMessageBox.Information if success else QMessageBox.Critical)
+        msg_box.exec()
+
+    def add_action(
+        self,
+        icon_path: Path,
+        text: str,
+        callback: callable,
+        enabled_flag: bool = True,
+        add_to_menu: bool = True,
+        add_to_toolbar: bool = True,
+        status_tip: Optional[str] = None,
+        whats_this: Optional[str] = None,
+        parent: Optional[QWidget] = None,
+    ) -> QAction:
         """Add a toolbar icon to the toolbar."""
-        icon = QIcon(icon_path)
-        action = QAction(icon, text, parent)
+        action = QAction(QIcon(str(icon_path)), text, parent)
         action.triggered.connect(callback)
         action.setEnabled(enabled_flag)
 
-        if status_tip is not None:
+        if status_tip:
             action.setStatusTip(status_tip)
 
-        if whats_this is not None:
+        if whats_this:
             action.setWhatsThis(whats_this)
 
         if add_to_toolbar:
             self.iface.addToolBarIcon(action)
 
         if add_to_menu:
-            self.iface.addPluginToVectorMenu(
-                self.menu,
-                action)
+            self.iface.addPluginToVectorMenu(self.menu, action)
 
         self.actions.append(action)
-
         return action
 
     def initGui(self):
         """Create the menu entries and toolbar icons inside QGIS."""
-        icon_path = os.path.join(self.plugin_dir, 'iconIn.png')
+        icon_path = self.plugin_dir / "iconIn.png"
         self.add_action(
             icon_path,
             text="Open JVF DTM Viewer",
             callback=self.run,
-            parent=self.iface.mainWindow())
-
+            parent=self.iface.mainWindow(),
+        )
         self.first_start = True
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
-            self.iface.removePluginVectorMenu(
-                self.menu,
-                action)
+            self.iface.removePluginVectorMenu(self.menu, action)
             self.iface.removeToolBarIcon(action)
+        self.actions.clear()
 
-    def run(self):
-        """Run method that performs all the real work"""
+    def run(self) -> None:
+        """Run method that performs all the real work."""
         filename, _ = QFileDialog.getOpenFileName(
-            None,
-            "Select JVF File",
-            "",
-            "JVF files XML files (*.xml);;All files (*.*)"
+            None, "Select JVF File", "", "JVF files XML files (*.xml);;All files (*.*)"
         )
-        
-        if filename:
-            success, message = self.parser.parse_file(filename)
-            
-            msgBox = QMessageBox()
-            msgBox.setText(message)
-            if (success == False) :
-            
-                msgBox.setIcon(QMessageBox.Critical)
-                msgBox.exec()
-    
+        if not filename:
+            return
+
+        success, message = self.parser.parse_file(filename)
+        self._show_message_box(message, success)
