@@ -1,46 +1,71 @@
-from typing import Optional, Dict
-import pandas as pd
+"""
+@brief Style manager
+
+Classes:
+ - StyleManager
+
+(C) 2024-2025 by MapGeeks
+@author Petr Barandovski petr.barandovski@gmail.com
+@author Linda Karlovska linda.karlovska@seznam.cz
+
+This plugin is free under the MIT License.
+"""
+
 import json
 import logging
+from typing import Optional, Dict
+import pandas as pd
+
+from .helpers import resolve_path, load_config
 
 logger = logging.getLogger(__name__)
 
+
 class StyleManager:
     """Třída pro efektivní správu stylů"""
-    
+
     def __init__(self):
         self._style_cache: Dict[str, str] = {}
-        self._style_df: Optional[pd.DataFrame] = None
-        self._initialized: bool = False
 
-    def load_styles(self, filename: str) -> None:
+        self.initialized: bool = False
+        self.style_df: Optional[pd.DataFrame] = None
+
+    def load_styles(self, filename: Optional[str] = None) -> None:
         """
         Načte styly z CSV souboru a uloží je do cache pro rychlý přístup.
         Provede se pouze jednou při prvním požadavku.
+
+        Args:
+            filename (Optional[str]): Cesta k souboru se styly. Pokud není zadána,
+                                      použije se cesta z konfigurace.
         """
-        if self._initialized:
+        if self.initialized:
             return
 
+        config = load_config()
+        filename = filename or config.get("styles", None)
+
         try:
-            # Načteme CSV efektivněji - pouze potřebné sloupce
-            self._style_df = pd.read_csv(
-                filename,
-                delimiter='|',
-                encoding='utf-8',
-                dtype={'key': str, 'qgis_symbol': str},
-                usecols=['key', 'qgis_symbol'],
+            # Načtení CSV souboru s optimalizací na potřebné sloupce
+            self.style_df = pd.read_csv(
+                resolve_path(filename),
+                delimiter="|",
+                encoding="utf-8",
+                dtype={"key": str, "qgis_symbol": str},
+                usecols=["key", "qgis_symbol"],
                 quotechar='"',
-                keep_default_na=False
+                keep_default_na=False,
             )
-            
             # Převedeme DataFrame na dict pro O(1) přístup
-            self._style_cache = dict(zip(self._style_df['key'], self._style_df['qgis_symbol']))
-            self._initialized = True
-            
+            self._style_cache = dict(
+                zip(self.style_df["key"], self.style_df["qgis_symbol"])
+            )
+            self.initialized = True
+
         except Exception as e:
             logger.error(f"Error loading styles: {e}")
             self._style_cache = {}
-            self._initialized = False
+            self.initialized = False
 
     def get_style(self, style_key: str) -> Optional[dict]:
         """
