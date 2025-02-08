@@ -85,19 +85,22 @@ se načte soubor načte se soubor typy_druhy.csv – ukázka:
 Znamená to, že objekt 162 plot  je z hlediska stylů charakterizován atributem DruhPlotu (drátěný atd.).
 
 Vzhledem k tomu, že ve výše uvedeném nodu je
+
 **005 provozní plocha pozemní komunikace**
 
 Dojde k hledání v tomto souboru a vyhodnotí se to tak, že z hlediska stylů nemá charakteristický atribut (atributy) a základ klíče pro vyhledání stylu je tudíž jen
+
 **005 provozní plocha pozemní komunikace**
+
 bez další charakteristiky
 
 Klíč se doplní ještě o geometrii vrstvy, tady Point a v cyklu bude postupně hledáno ve stylech pro všechna měřítka s těmito klíči:
-
-**005 provozní plocha pozemní komunikace_Point_500
+```
+005 provozní plocha pozemní komunikace_Point_500
 005 provozní plocha pozemní komunikace_Point_5000
 005 provozní plocha pozemní komunikace_Point_10000
-005 provozní plocha pozemní komunikace_Point_25000**
-
+005 provozní plocha pozemní komunikace_Point_25000
+```
 Matchne se jenom 500.
 
 ## Tady ukážu na složitějším nodu, jak je to, když má objekt charakteristický atribut z hlediska stylů:
@@ -144,16 +147,21 @@ Matchne se jenom 500.
 ```
 
 Zde je v souboru typy_druhy.csv dohledán
+
 **162 plot|DruhPlotu**
 
 V konkrétním případě je to 2, k tomu se dohledá v /xsd/common/atributy.xsd název, což je „drátěný“ a základ klíče pro vyhledání stylu je tudíž
+
 **162 plot - drátěný**
 
 Klíč se doplní ještě o geometrii vrstvy, tady LineString a v cyklu bude postupně hledáno ve stylech pro všechna měřítka s těmito klíči:
-**162 plot - drátěný_LineString_500
+
+```
+162 plot - drátěný_LineString_500
 162 plot - drátěný_LineString_5000
 162 plot - drátěný_LineString_10000
-162 plot - drátěný_LineString_25000**
+162 plot - drátěný_LineString_25000
+```
 
 V prvních dvou případech se to matchne.
 
@@ -206,26 +214,35 @@ V prvních dvou případech se to matchne.
 ```
 
 Zde je v souboru typy_druhy.csv dohledán
+
+
 **112 technologický objekt plynovodní sítě|TlakovaHladinaPlynovodniSite**
 
+
 V konkrétním případě je to 99, k tomu se dohledá v /xsd/common/atributy.xsd název, což je „nezjištěno/neurčeno“ a základ klíče pro vyhledání stylu je tudíž
+
 **112 technologický objekt plynovodní sítě - nezjištěno/neurčeno**
 
+
 Klíč se doplní ještě o geometrii vrstvy, tady Point a v cyklu bude postupně hledáno ve stylech pro všechna měřítka s těmito klíči:
-**112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point_500
+```
+112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point_500
 112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point _5000
 112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point _10000
-112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point _25000**
+112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point _25000
+```
 
 Nematchne se ale nic, protože klíč je ve styles2.csv z nějakého důvodu
+
 **112 technologický objekt plynovodní sítě - nezjištěno_Point_500**
 
 S tím ale počítám a ještě zkouším
-**112 technologický objekt plynovodní sítě - nezjištěno _Point_500
+```
+112 technologický objekt plynovodní sítě - nezjištěno _Point_500
 112 technologický objekt plynovodní sítě - nezjištěno _Point _5000
 112 technologický objekt plynovodní sítě - nezjištěno _Point _10000
-112 technologický objekt plynovodní sítě - nezjištěno _Point _25000**
-
+112 technologický objekt plynovodní sítě - nezjištěno _Point _25000
+```
 To se už matchne na prvním.
 
 Kdyby to ani tak nevyšlo, zkouším ještě s „neurčeno“.
@@ -314,16 +331,19 @@ Kdyby to ani tak nevyšlo, zkouším ještě s „neurčeno“.
 ``` 
 
 Zde je v souboru typy_druhy.csv dohledán
+
 **111 zařízení plynovodní sítě|TypZarizeniPlynovodniSite**
 
 V konkrétním případě je to 0, k tomu se dohledá v /xsd/common/atributy.xsd název, což je „neveřejný údaj“.
 
 Takový styl obecně není, tak rovnou zkouším různé defaultní hodnoty podle xsd je postupně takto:
-**0 vynechávám, pokud je to neveřejný údaj, 
+```
+0 vynechávám, pokud je to neveřejný údaj, 
 pak zkouším 99 (jiná, jiný, jiné) , pokud v xsd k tomu typu 99 je, 
-pak zkouším 98 (nezjištěno/neručeno) na všechny tři kominace, pokud v xsd k tomu typu 98 je.**
-
+pak zkouším 98 (nezjištěno/neručeno) na všechny tři kominace, pokud v xsd k tomu typu 98 je.
+```
 Matchne se
+
 **111 zařízení plynovodní sítě - jiné_Point_500**
 
 
