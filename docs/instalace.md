@@ -2,7 +2,7 @@
 
 Klikněte na menu "Zásuvné moduly" -> "Správa a instalace Zásuvných modulů ..." -> "Instalovat ze ZIPu" -> najděte ZIP s pluginem a dejte "Instalovat zásuvný modul".
 
-![Správa a instalace zásuvných modulů](/img/sprava-zasuvnych-modulu.png "Správa a instalace zásuvných modulů").
+![Správa a instalace zásuvných modulů](img/sprava-zasuvnych-modulu.png "Správa a instalace zásuvných modulů").
 
 ![Instalovat ze ZIPu](/img/instalace-modulu-ze-zipu.png "Instalovat ze ZIPu").
 
