@@ -1,6 +1,10 @@
 # Instalace
 
-Klikněte na menu "Zásuvné moduly" -> "Správa a instalace Zásuvných modulů ..." -> "Instalovat ze ZIPu" -> najděte ZIP s pluginem a dejte "Instalovat zásuvný modul".
+Nejprve si plugin stáhněte z GitHubu:
+
+![Stažení pluginu z GitHubu](img/stazeni_z_githubu.png "Stažení modulu z githubu").
+
+Spusťte QGIS a klikněte na menu "Zásuvné moduly" -> "Správa a instalace Zásuvných modulů ..." -> "Instalovat ze ZIPu" -> najděte ZIP s pluginem a dejte "Instalovat zásuvný modul".
 
 ![Správa a instalace zásuvných modulů](img/sprava-zasuvnych-modulu.png "Správa a instalace zásuvných modulů").
 
