@@ -1,0 +1,13 @@
+# Ignorování složek s cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorování prostředí virtuálního Pythonu
+venv/
+env/
+
+# Ignorování souborů z IDE
+.vscode/
+
