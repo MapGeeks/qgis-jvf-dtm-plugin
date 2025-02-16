@@ -1,5 +1,5 @@
 {
     "xsd_attributes": "xsd/common/atributy.xsd",
-    "type_mapping": "typy_druhy.csv",
-    "styles": "styles.csv"
+    "type_mapping": "csv/typy_druhy.csv",
+    "styles": "csv/styles.csv"
 }
