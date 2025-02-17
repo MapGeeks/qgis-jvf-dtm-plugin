@@ -3,17 +3,17 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=JVF_DMVS_viewer
+name=qgis-jvf-dmvs-plugin
 qgisMinimumVersion=3.0
-description=JVF_DMVS_viewer
 version=0.1
-author=Petr Barandovski
-email=petr.barandovski@gmail.com
+author=Linda Karlovská, Petr Barandovski
+email=mapgeekscz@gmail.com
 
-about=Provide a brief description of the plugin and its purpose.
+about=Plugin umoznuje zobrazit data ve formatu digitalni technicke mapy (DTM JVF) v prostredi QGIS. 
+description=Zpracovava vstupni JVF soubory, rozdeluje data do skupin a vrstev a automaticky jim prirazuje styl zobrazeni.
 
-tracker=http://bugs
-repository=http://repo
+tracker=https://github.com/MapGeeks/qgis-jvf-dmvs-plugin/issues
+repository=https://github.com/MapGeeks/qgis-jvf-dmvs-plugin
 # End of mandatory metadata
 
 # Recommended items:
@@ -25,7 +25,7 @@ hasProcessingProvider=no
 # Tags are comma separated with spaces allowed
 tags=python
 
-homepage=http://homepage
+homepage=hhttps://github.com/MapGeeks/qgis-jvf-dmvs-plugin
 category=Vector
 icon=icon.png
 # experimental flag

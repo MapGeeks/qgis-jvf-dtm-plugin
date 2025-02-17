@@ -19,5 +19,5 @@ def classFactory(iface):
     :param iface: A QGIS interface instance.
     :type iface: QgsInterface
     """
-    from .gml_viewer import GMLViewer
+    from .src.gml_viewer import GMLViewer
     return GMLViewer(iface)

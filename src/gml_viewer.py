@@ -101,7 +101,7 @@ class GMLViewer:
 
     def initGui(self):
         """Create the menu entries and toolbar icons inside QGIS."""
-        icon_path = self.plugin_dir / "iconIn.png"
+        icon_path = self.plugin_dir / "../icons/iconIn.png"
         self.add_action(
             icon_path,
             text="Open JVF DTM Viewer",
