@@ -16,12 +16,12 @@ Umožňuje jednoduché zobrazení vrstev dopravní infrastruktury, technické in
 ## 📌 **Instalace a použití**
 Instalace je podrobně popsána [zde](/docs/instalace.md). Použití popsáno [zde](/docs/pouziti.md) je možné nejprve otestovat na testovacích datech.
 
-- **Testovací data:** **Ke stažení [zde](/tests/data/test_data.zip)**  
+- **Testovací data:** **Ke stažení [zde](/sample_data/JVF_DTM_143_UkazkyXML.zip)**  
 
 ## 📌 **Časté otázky a odpovědi**
 
 ## Odkud pocházejí testovací data a jak je použít?  
-Testovací data pocházejí z **Portálu DMVS** a jsou ke stažení [zde](/tests/data/test_data.zip). Před použitím je nutné je **rozbalit**. Dataset obsahuje ukázkové soubory formátu JVF, zahrnující vrstvy **dopravní infrastruktury, technické infrastruktury a základní prostorové situace**.
+Testovací data pocházejí z **Portálu DMVS** a jsou ke stažení [zde](/sample_data/JVF_DTM_143_UkazkyXML.zip). Před použitím je nutné je **rozbalit**. Dataset obsahuje ukázkové soubory formátu JVF, zahrnující vrstvy **dopravní infrastruktury, technické infrastruktury a základní prostorové situace**.
 
 ## Jaká je rychlost načítání?  
 Rychlost načítání závisí na velikosti souboru:  
