@@ -1,4 +1,4 @@
-# **Zásuvný plugin QGIS pro digitální technickou mapu** 
+# **QGIS plugin pro digitální technickou mapu** 
 
 Tento **QGIS plugin** umožňuje načítání a vizualizaci **digitální technické mapy (DTM)** ve formátu **JVF**. 
 Umožňuje jednoduché zobrazení vrstev dopravní infrastruktury, technické infrastruktury a základní prostorové situace přímo v prostředí **QGIS**.  
