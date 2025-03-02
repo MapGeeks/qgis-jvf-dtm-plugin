@@ -314,7 +314,7 @@ class CzechDTMParser:
             )
 
             features_dict = type_features[type_key]
-            if not features_dict["first_element"]:
+            if  features_dict["first_element"] is None:
                 features_dict.update(
                     {
                         "first_element": record,
@@ -341,7 +341,7 @@ class CzechDTMParser:
             )
 
             features_dict = type_features[type_key]
-            if not features_dict["first_element"]:
+            if features_dict["first_element"] is None:
                 features_dict.update(
                     {
                         "first_element": record,
