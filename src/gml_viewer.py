@@ -131,5 +131,5 @@ class GMLViewer:
         # Spustíme parsování ve vlákně a pokračujeme dál
         # Zpětná vazba uživateli bude poskytnuta přes QgsMessageBar
         self.parser.parse_file(filename)
-        
+
         # Zde už se nevypisuje žádná zpráva - zpětná vazba je zajištěna v DTMParserTask.finished
