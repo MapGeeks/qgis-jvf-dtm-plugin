@@ -149,6 +149,8 @@ class CzechDTMParser:
         # Nyní je úloha dokončena, můžeme finalizovat vrstvy v hlavním vlákně
         if hasattr(task, "success") and task.success:
             try:
+                # Odstraníme zprávu o zahájení načítání
+                self.iface.messageBar().clearWidgets()
                 # Finalizace projektu
                 self._finalize_project_tree()
                 self._zoom_to_data()
@@ -159,6 +161,10 @@ class CzechDTMParser:
                 logger.error(f"Chyba při finalizaci dat: {e}", exc_info=True)
                 self.iface.messageBar().pushWarning("DTM Parser", f"Chyba: {str(e)}")
         else:
+            message = getattr(task, "message", "Neznámá chyba")
+            # Odstraníme zprávu o zahájení načítání
+            self.iface.messageBar().clearWidgets()
+
             message = getattr(task, "message", "Neznámá chyba")
             self.iface.messageBar().pushWarning("DTM Parser", message)
 
