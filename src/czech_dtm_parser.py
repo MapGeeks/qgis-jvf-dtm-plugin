@@ -32,6 +32,7 @@ from qgis.core import (
     QgsProject,
     QgsRuleBasedRenderer,
     QgsApplication,
+    QgsLayerTreeGroup,
 )
 
 from .style_manager import StyleManager
@@ -107,6 +108,7 @@ class CzechDTMParser:
         self.feature_processor = BatchFeatureProcessor()
         self.symbol_processor = SymbolProcessor()
         self.attr_processor = AttributeProcessor()
+        self.last_loaded_file = None
 
         # Načtení konfigurace
         self.type_mapping_df = load_type_mapping()
@@ -663,20 +665,31 @@ class CzechDTMParser:
     def _create_group_structure(self, data_obj):
         """
         Vytvoří strukturu skupin a uloží je do dočasné struktury.
+        Všechny skupiny jsou zanořeny do skupiny s názvem souboru.
 
         Returns:
             Dict: Slovník s cestami ke skupinám
         """
+        # Získáme název souboru - použijeme plnou cestu
+        if self.last_loaded_file:
+            filename = self.last_loaded_file
+        else:
+            filename = "Neurčený soubor"
+
         obsahova_cast = data_obj.find("x:ObsahovaCast", NAMESPACES).text
         kategorie = data_obj.find("x:KategorieObjektu", NAMESPACES).text
         skupina = data_obj.find("x:SkupinaObjektu", NAMESPACES).text
 
-        # Vytvoříme cesty k jednotlivým úrovním skupin
-        obsah_path = obsahova_cast
+        # Vytvoříme cesty k jednotlivým úrovním skupin s názvem souboru jako kořenem
+        file_path = filename
+        obsah_path = f"{file_path}/{obsahova_cast}"
         kategorie_path = f"{obsah_path}/{kategorie}"
         skupina_path = f"{kategorie_path}/{skupina}"
 
         # Přidáme do dočasné struktury, pokud tam ještě nejsou
+        if file_path not in self.temp_tree_structure:
+            self.temp_tree_structure[file_path] = filename
+
         if obsah_path not in self.temp_tree_structure:
             self.temp_tree_structure[obsah_path] = obsahova_cast
 
@@ -687,6 +700,7 @@ class CzechDTMParser:
             self.temp_tree_structure[skupina_path] = skupina
 
         return {
+            "soubor": file_path,
             "obsah": obsah_path,
             "kategorie": kategorie_path,
             "skupina": skupina_path,
@@ -920,6 +934,7 @@ class CzechDTMParser:
 
             # Nastavíme pohled
             canvas = self.iface.mapCanvas()
+
             canvas.setExtent(combined_extent)
 
             # Použijeme největší nalezené měřítko, nebo výchozí hodnotu
@@ -932,7 +947,22 @@ class CzechDTMParser:
             target_scale = largest_scale * 0.99
 
             canvas.zoomScale(target_scale)
-            canvas.refresh()
+            # Uložíme výsledný extent po nastavení měřítka
+            scale_based_extent = canvas.extent()
+
+            # Metoda 2: Standardní "zoom na všechno"
+            canvas.setExtent(combined_extent)
+            canvas.zoomToFullExtent()  # Alternativně: canvas.zoomToFeatureExtent(combined_extent)
+            zoom_all_extent = canvas.extent()
+
+            # Porovnáme plochy obou extentů
+            scale_based_area = scale_based_extent.width() * scale_based_extent.height()
+            zoom_all_area = zoom_all_extent.width() * zoom_all_extent.height()
+
+            # Vybereme větší výřez
+            if zoom_all_area > scale_based_area:
+                canvas.setExtent(scale_based_extent)
+                canvas.refresh()
 
             # print(f"Zoom was completed successfully to scale 1:{target_scale}")
 
