@@ -29,3 +29,9 @@ jobs:
     - name: Build package
       run: |
         pb_tool zip
+
+    - name: Upload ZIP artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: qgis-jvf-dtm-plugin.zip
+        path: zip_build/qgis-jvf-dtm-plugin.zip
