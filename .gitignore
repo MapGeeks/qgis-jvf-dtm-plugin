@@ -11,3 +11,5 @@ env/
 # Ignorování souborů z IDE
 .vscode/
 
+zip_build/
+*~
