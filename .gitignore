@@ -12,4 +12,5 @@ env/
 .vscode/
 
 zip_build/
+sample_data/*.xml
 *~
