@@ -122,12 +122,25 @@ class CzechDTMParser:
         """
         Hlavní metoda pro parsování DTM souboru - používá neblokující přístup.
         """
-        from PyQt5.QtCore import QEventLoop, QTimer
+        from PyQt5.QtCore import QEventLoop
+
+        root = QgsProject.instance().layerTreeRoot()
 
         # Resetujeme struktury
         self.temp_tree_structure = {}
         self.temp_layers = []
         self.root_groups = {}
+
+        self.last_loaded_file = filename.replace("/", "|").replace("\\", "|")
+
+        # Nejprve odstraníme existující skupinu, pokud soubor už byl načten
+        self._remove_existing_group(self.last_loaded_file)
+
+        # Projdeme všechny skupiny první úrovně
+        for child in root.children():
+            # Zkontrolujeme, zda jde o skupinu
+            if isinstance(child, QgsLayerTreeGroup):
+                child.setItemVisibilityChecked(False)
 
         # Informace pro uživatele
         self.iface.messageBar().pushInfo("DTM Parser", "Načítání dat zahájeno...")
@@ -151,6 +164,7 @@ class CzechDTMParser:
         # Nyní je úloha dokončena, můžeme finalizovat vrstvy v hlavním vlákně
         if hasattr(task, "success") and task.success:
             try:
+
                 # Odstraníme zprávu o zahájení načítání
                 self.iface.messageBar().clearWidgets()
                 # Finalizace projektu
@@ -163,7 +177,6 @@ class CzechDTMParser:
                 logger.error(f"Chyba při finalizaci dat: {e}", exc_info=True)
                 self.iface.messageBar().pushWarning("DTM Parser", f"Chyba: {str(e)}")
         else:
-            message = getattr(task, "message", "Neznámá chyba")
             # Odstraníme zprávu o zahájení načítání
             self.iface.messageBar().clearWidgets()
 
@@ -934,7 +947,6 @@ class CzechDTMParser:
 
             # Nastavíme pohled
             canvas = self.iface.mapCanvas()
-
             canvas.setExtent(combined_extent)
 
             # Použijeme největší nalezené měřítko, nebo výchozí hodnotu
@@ -968,3 +980,49 @@ class CzechDTMParser:
 
         # Použijeme delší zpoždění pro jistotu
         QTimer.singleShot(500, do_zoom)
+
+    def _remove_existing_group(self, group_name):
+        """
+        Odstraní existující skupinu se stejným názvem jako aktuálně načítaný soubor.
+
+        Args:
+            file_path: Cesta k souboru
+
+        Returns:
+            bool: True pokud byla skupina odstraněna, jinak False
+        """
+
+        # Získáme kořen stromové struktury
+        root = QgsProject.instance().layerTreeRoot()
+
+        # Najdeme skupinu podle názvu
+        existing_group = root.findGroup(group_name)
+
+        if existing_group:
+            # Před odstraněním musíme nejprve získat všechny vrstvy ve skupině a jejích podskupinách
+            self._remove_layers_in_group(existing_group)
+
+            # Nyní můžeme odstranit skupinu
+            root.removeChildNode(existing_group)
+            return True
+
+        return False
+
+    def _remove_layers_in_group(self, group):
+        """
+        Rekurzivně odstraní všechny vrstvy ve skupině a jejích podskupinách z projektu.
+
+        Args:
+            group: QgsLayerTreeGroup, která má být zpracována
+        """
+        from qgis.core import QgsProject, QgsLayerTreeGroup, QgsLayerTreeLayer
+
+        # Nejprve rekurzivně zpracujeme všechny podskupiny
+        for child in group.children():
+            if isinstance(child, QgsLayerTreeGroup):
+                self._remove_layers_in_group(child)
+            elif isinstance(child, QgsLayerTreeLayer):
+                # Získáme Layer ID
+                layer_id = child.layerId()
+                # Odstraníme vrstvu z projektu
+                QgsProject.instance().removeMapLayer(layer_id)
