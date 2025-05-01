@@ -128,5 +128,8 @@ class GMLViewer:
         if not filename:
             return
 
-        success, message = self.parser.parse_file(filename)
-        self._show_message_box(message, success)
+        # Spustíme parsování ve vlákně a pokračujeme dál
+        # Zpětná vazba uživateli bude poskytnuta přes QgsMessageBar
+        self.parser.parse_file(filename)
+
+        # Zde už se nevypisuje žádná zpráva - zpětná vazba je zajištěna v DTMParserTask.finished
