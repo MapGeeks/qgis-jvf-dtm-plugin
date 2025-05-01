@@ -32,6 +32,7 @@ from qgis.core import (
     QgsProject,
     QgsRuleBasedRenderer,
     QgsApplication,
+    QgsLayerTreeGroup,
 )
 
 from .style_manager import StyleManager
@@ -107,6 +108,7 @@ class CzechDTMParser:
         self.feature_processor = BatchFeatureProcessor()
         self.symbol_processor = SymbolProcessor()
         self.attr_processor = AttributeProcessor()
+        self.last_loaded_file = None
 
         # Načtení konfigurace
         self.type_mapping_df = load_type_mapping()
@@ -120,12 +122,25 @@ class CzechDTMParser:
         """
         Hlavní metoda pro parsování DTM souboru - používá neblokující přístup.
         """
-        from PyQt5.QtCore import QEventLoop, QTimer
+        from PyQt5.QtCore import QEventLoop
+
+        root = QgsProject.instance().layerTreeRoot()
 
         # Resetujeme struktury
         self.temp_tree_structure = {}
         self.temp_layers = []
         self.root_groups = {}
+
+        self.last_loaded_file = filename.replace("/", "|").replace("\\", "|")
+
+        # Nejprve odstraníme existující skupinu, pokud soubor už byl načten
+        self._remove_existing_group(self.last_loaded_file)
+
+        # Projdeme všechny skupiny první úrovně
+        for child in root.children():
+            # Zkontrolujeme, zda jde o skupinu
+            if isinstance(child, QgsLayerTreeGroup):
+                child.setItemVisibilityChecked(False)
 
         # Informace pro uživatele
         self.iface.messageBar().pushInfo("DTM Parser", "Načítání dat zahájeno...")
@@ -149,6 +164,7 @@ class CzechDTMParser:
         # Nyní je úloha dokončena, můžeme finalizovat vrstvy v hlavním vlákně
         if hasattr(task, "success") and task.success:
             try:
+
                 # Odstraníme zprávu o zahájení načítání
                 self.iface.messageBar().clearWidgets()
                 # Finalizace projektu
@@ -161,7 +177,6 @@ class CzechDTMParser:
                 logger.error(f"Chyba při finalizaci dat: {e}", exc_info=True)
                 self.iface.messageBar().pushWarning("DTM Parser", f"Chyba: {str(e)}")
         else:
-            message = getattr(task, "message", "Neznámá chyba")
             # Odstraníme zprávu o zahájení načítání
             self.iface.messageBar().clearWidgets()
 
@@ -663,20 +678,31 @@ class CzechDTMParser:
     def _create_group_structure(self, data_obj):
         """
         Vytvoří strukturu skupin a uloží je do dočasné struktury.
+        Všechny skupiny jsou zanořeny do skupiny s názvem souboru.
 
         Returns:
             Dict: Slovník s cestami ke skupinám
         """
+        # Získáme název souboru - použijeme plnou cestu
+        if self.last_loaded_file:
+            filename = self.last_loaded_file
+        else:
+            filename = "Neurčený soubor"
+
         obsahova_cast = data_obj.find("x:ObsahovaCast", NAMESPACES).text
         kategorie = data_obj.find("x:KategorieObjektu", NAMESPACES).text
         skupina = data_obj.find("x:SkupinaObjektu", NAMESPACES).text
 
-        # Vytvoříme cesty k jednotlivým úrovním skupin
-        obsah_path = obsahova_cast
+        # Vytvoříme cesty k jednotlivým úrovním skupin s názvem souboru jako kořenem
+        file_path = filename
+        obsah_path = f"{file_path}/{obsahova_cast}"
         kategorie_path = f"{obsah_path}/{kategorie}"
         skupina_path = f"{kategorie_path}/{skupina}"
 
         # Přidáme do dočasné struktury, pokud tam ještě nejsou
+        if file_path not in self.temp_tree_structure:
+            self.temp_tree_structure[file_path] = filename
+
         if obsah_path not in self.temp_tree_structure:
             self.temp_tree_structure[obsah_path] = obsahova_cast
 
@@ -687,6 +713,7 @@ class CzechDTMParser:
             self.temp_tree_structure[skupina_path] = skupina
 
         return {
+            "soubor": file_path,
             "obsah": obsah_path,
             "kategorie": kategorie_path,
             "skupina": skupina_path,
@@ -932,9 +959,70 @@ class CzechDTMParser:
             target_scale = largest_scale * 0.99
 
             canvas.zoomScale(target_scale)
-            canvas.refresh()
+            # Uložíme výsledný extent po nastavení měřítka
+            scale_based_extent = canvas.extent()
+
+            # Metoda 2: Standardní "zoom na všechno"
+            canvas.setExtent(combined_extent)
+            canvas.zoomToFullExtent()  # Alternativně: canvas.zoomToFeatureExtent(combined_extent)
+            zoom_all_extent = canvas.extent()
+
+            # Porovnáme plochy obou extentů
+            scale_based_area = scale_based_extent.width() * scale_based_extent.height()
+            zoom_all_area = zoom_all_extent.width() * zoom_all_extent.height()
+
+            # Vybereme větší výřez
+            if zoom_all_area > scale_based_area:
+                canvas.setExtent(scale_based_extent)
+                canvas.refresh()
 
             # print(f"Zoom was completed successfully to scale 1:{target_scale}")
 
         # Použijeme delší zpoždění pro jistotu
         QTimer.singleShot(500, do_zoom)
+
+    def _remove_existing_group(self, group_name):
+        """
+        Odstraní existující skupinu se stejným názvem jako aktuálně načítaný soubor.
+
+        Args:
+            file_path: Cesta k souboru
+
+        Returns:
+            bool: True pokud byla skupina odstraněna, jinak False
+        """
+
+        # Získáme kořen stromové struktury
+        root = QgsProject.instance().layerTreeRoot()
+
+        # Najdeme skupinu podle názvu
+        existing_group = root.findGroup(group_name)
+
+        if existing_group:
+            # Před odstraněním musíme nejprve získat všechny vrstvy ve skupině a jejích podskupinách
+            self._remove_layers_in_group(existing_group)
+
+            # Nyní můžeme odstranit skupinu
+            root.removeChildNode(existing_group)
+            return True
+
+        return False
+
+    def _remove_layers_in_group(self, group):
+        """
+        Rekurzivně odstraní všechny vrstvy ve skupině a jejích podskupinách z projektu.
+
+        Args:
+            group: QgsLayerTreeGroup, která má být zpracována
+        """
+        from qgis.core import QgsProject, QgsLayerTreeGroup, QgsLayerTreeLayer
+
+        # Nejprve rekurzivně zpracujeme všechny podskupiny
+        for child in group.children():
+            if isinstance(child, QgsLayerTreeGroup):
+                self._remove_layers_in_group(child)
+            elif isinstance(child, QgsLayerTreeLayer):
+                # Získáme Layer ID
+                layer_id = child.layerId()
+                # Odstraníme vrstvu z projektu
+                QgsProject.instance().removeMapLayer(layer_id)
