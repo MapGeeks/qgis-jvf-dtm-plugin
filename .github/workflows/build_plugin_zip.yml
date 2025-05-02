@@ -35,3 +35,4 @@ jobs:
       with:
         name: qgis-jvf-dtm-plugin
         path: zip_build/qgis-jvf-dtm-plugin.zip
+        if-no-files-found: error
