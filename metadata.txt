@@ -5,15 +5,15 @@
 [general]
 name=JVF DTM Plugin
 qgisMinimumVersion=3.0
-version=0.1
+version=1.1
 author=Linda Karlovská, Petr Barandovski
 email=mapgeekscz@gmail.com
 
 about=Plugin umoznuje zobrazit data ve formatu digitalni technicke mapy (DTM JVF) v prostredi QGIS. 
 description=Zpracovava vstupni JVF soubory, rozdeluje data do skupin a vrstev a automaticky jim prirazuje styl zobrazeni.
 
-tracker=https://github.com/MapGeeks/qgis-jvf-dmvs-plugin/issues
-repository=https://github.com/MapGeeks/qgis-jvf-dmvs-plugin
+tracker=https://github.com/MapGeeks/qgis-jvf-dtm-plugin/issues
+repository=https://github.com/MapGeeks/qgis-jvf-dtm-plugin
 # End of mandatory metadata
 
 # Recommended items:
@@ -23,11 +23,11 @@ hasProcessingProvider=no
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=python
+tags=python, gdal, JVF, DTM
 
-homepage=https://github.com/MapGeeks/qgis-jvf-dmvs-plugin
+homepage=https://github.com/MapGeeks/qgis-jvf-dtm-plugin/blob/main/readme.md
 category=Vector
-icon=icon.png
+icon=icons/iconIn.png
 # experimental flag
 experimental=True
 
