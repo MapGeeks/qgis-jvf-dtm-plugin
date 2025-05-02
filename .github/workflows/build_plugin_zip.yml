@@ -33,5 +33,5 @@ jobs:
     - name: Upload ZIP artifact
       uses: actions/upload-artifact@v4
       with:
-        name: qgis-jvf-dtm-plugin.zip
+        name: qgis-jvf-dtm-plugin
         path: zip_build/qgis-jvf-dtm-plugin.zip
