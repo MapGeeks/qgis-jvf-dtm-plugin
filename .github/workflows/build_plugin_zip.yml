@@ -30,9 +30,13 @@ jobs:
       run: |
         pb_tool zip
 
+    - name: Prepare artifact
+      run: |
+        rm zip_build/*.zip zip_build/*.txt
+
     - name: Upload ZIP artifact
       uses: actions/upload-artifact@v4
       with:
         name: qgis-jvf-dtm-plugin
-        path: zip_build/qgis-jvf-dtm-plugin
+        path: zip_build/
         if-no-files-found: error
