@@ -1,0 +1,42 @@
+name: Build QGIS plugin zip package
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python3 -m pip install pb_tool
+
+    - name: Build package
+      run: |
+        pb_tool zip
+
+    - name: Prepare artifact
+      run: |
+        rm zip_build/*.zip zip_build/*.txt
+
+    - name: Upload ZIP artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: qgis-jvf-dtm-plugin
+        path: zip_build/
+        if-no-files-found: error

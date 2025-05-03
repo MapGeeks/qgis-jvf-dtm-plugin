@@ -11,3 +11,6 @@ env/
 # Ignorování souborů z IDE
 .vscode/
 
+zip_build/
+sample_data/*.xml
+*~
