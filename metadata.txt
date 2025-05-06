@@ -9,8 +9,8 @@ version=1.1
 author=Linda Karlovská, Petr Barandovski
 email=mapgeekscz@gmail.com
 
-about=Plugin umoznuje zobrazit data ve formatu digitalni technicke mapy (DTM JVF) v prostredi QGIS. 
-description=Zpracovava vstupni JVF soubory, rozdeluje data do skupin a vrstev a automaticky jim prirazuje styl zobrazeni.
+description=Plugin allows to display data in Czech digital technical map format (DTM JVF) in QGIS environment.<br />Plugin umožňuje zobrazit data ve formátu digitalní technické mapy (DTM JVF) v prostředí QGIS.
+about=Processes input files in JVF DTM format, divides data into groups and layers and automatically assigns style to them.<br />Zpracovává vstupní soubory ve formátu JVF DTM, rozděluje data do skupin a vrstev a automaticky jim přiřazuje styl zobrazení.
 
 tracker=https://github.com/MapGeeks/qgis-jvf-dtm-plugin/issues
 repository=https://github.com/MapGeeks/qgis-jvf-dtm-plugin
