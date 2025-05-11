@@ -6,7 +6,7 @@ Klikněte na ikonku
 Pokud tuto ikonku nevidíte, klikněte na menu "Zobrazit" -> "Nástrojové lišty" a zatrhněte "Panel nástrojů Zásuvné moduly"
 ![Zobrazit nástrojové lišty - zásuvné moduly](img/zobrazeni-zasuvnych-modulu.png "Zobrazit nástrojové lišty - zásuvné moduly").
 
-Po kliknut na ikonku na Vás vyskočí následující dialogové okno:
+Po kliknutí na ikonku na Vás vyskočí následující dialogové okno:
 ![Dialogové okno - otevřít](img/nacteni-souboru.png "Dialogové okno - otevřít").
 
 Otevřete požadovaný JVF soubor a vyčkejte až se načte.
