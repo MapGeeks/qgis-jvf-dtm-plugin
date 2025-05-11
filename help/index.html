@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Nápověda k pluginu JVF DTM</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      line-height: 1.6;
+      margin: 1em;
+    }
+
+    code {
+      white-space: pre-wrap;
+    }
+
+    span.smallcaps {
+      font-variant: small-caps;
+    }
+
+    span.underline {
+      text-decoration: underline;
+    }
+
+    div.column {
+      display: inline-block;
+      vertical-align: top;
+      width: 50%;
+    }
+
+    div.hanging-indent {
+      margin-left: 1.5em;
+      text-indent: -1.5em;
+    }
+
+    ul.task-list {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 1em 0;
+    }
+
+    /* Pro malé ikonky v textu */
+    p img.inline-img {
+      display: inline;
+      height: 2em;
+      width: auto;
+      vertical-align: middle;
+      margin: 0 0.3em;
+    }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Nápověda k pluginu JVF DTM</h1>
+</header>
+
+<h1 id="instalace-z-qgis-plugin-repozitáře">Instalace z QGIS Plugin repozitáře</h1>
+<p>Spusťte QGIS a klikněte na menu “Zásuvné moduly” -&gt; “Správa a instalace Zásuvných modulů …”: <img src="../docs/img/sprava-zasuvnych-modulu.png" title="Správa a instalace zásuvných modulů" alt="Správa a instalace zásuvných modulů" /> V otevřeném dialogovém okně přejděte do záložky “Not installed”. Napište klíčové slovo “DTM” a stiskněte Enter. Zobrazí se jeden nalezený plugin s názvem JVF DTM Plugin. V dalším kroku klikněte na tlačítko “Instalovat zásuvný modul” v pravém dolním rohu.</p>
+
+<h1 id="instalace-z-githubu-pro-testování-jiných-verzí-pluginu">Instalace z GitHubu (pro testování jiných verzí pluginu)</h1>
+<p>Plugin si nejprve stáhněte z GitHubu jako ZIP soubor. Dále spusťte QGIS a klikněte na menu “Zásuvné moduly” -&gt; “Správa a instalace Zásuvných modulů …”. V otevřeném dialogovém okně přejděte do záložky “Instalovat ze ZIPu”. Najděte ZIP soubor s pluginem a klikněte na “Instalovat zásuvný modul”.</p>
+
+<h1 id="použití">Jak plugin použít?</h1>
+<p>Klikněte na ikonku <img src="../docs/img/plugin-ikona.png" class="inline-img" title="Ikonka" alt="Ikonka" />.</p>
+<p>Pokud tuto ikonku nevidíte, klikněte na menu “Zobrazit” -&gt; “Nástrojové lišty” a zatrhněte “Panel nástrojů Zásuvné moduly”: <img src="../docs/img/zobrazeni-zasuvnych-modulu.png" title="Zobrazit nástrojové lišty - zásuvné moduly" alt="Zobrazit nástrojové lišty - zásuvné moduly" /></p>
+<p>Po kliknutí na ikonku na Vás vyskočí dialogové okno pro výběr souboru: <img src="../docs/img/nacteni-souboru.png" title="Dialogové okno - otevřít" alt="Dialogové okno - otevřít" /></p>
+<p>Otevřete požadovaný JVF soubor a vyčkejte až se načte. Výsledek může vypadat například takto: <img src="../docs/img/zobrazeni-qgis.png" title="Zobrazený soubor JVF" alt="Zobrazený soubor JVF" /></p>
+<p>Pokud chcete vidět atributy konkrétního objektu, klikněte na tuto ikonu: <img src="../docs/img/ikona-info-o-prvku.png" class="inline-img" title="Ikona atributy" alt="Ikona atributy" /> a vyberte vrstvu nebo skupinu, která Vás zajímá: <img src="../docs/img/vrstva-v-qgis.png" title="Vrstvy" alt="Vrstvy" />.</p>
+<p>Vybraný objekt (objekty) se zvýrazní červeně a vyskočí na Vás následující panel “Identifikovat výsledky” se seznamem atributů objektu (objektů): <img src="../docs/img/info-o-prvku.png" title="Identifikovat výsledky" alt="Identifikovat výsledky" />.</p>
+
+<h1 id="logika-stylování">Logika stylování</h1>
+<h2 id="nejjednodušší-případ">Nejjednodušší případ</h2>
+<pre><code>&lt;objtyp:ProvozniPlochaPozemniKomunikaceDefinicniBod&gt;
+    &lt;pokdef:ObjektovyTypNazev code_base=&quot;0100000005&quot; code_suffix=&quot;04&quot;&gt;provozní plocha pozemní komunikace&lt;/pokdef:ObjektovyTypNazev&gt;
+    &lt;pokdef:KategorieObjektu&gt;Dopravní stavby&lt;/pokdef:KategorieObjektu&gt;
+    &lt;pokdef:SkupinaObjektu&gt;Silniční doprava&lt;/pokdef:SkupinaObjektu&gt;
+    &lt;pokdef:ObsahovaCast&gt;ZPS&lt;/pokdef:ObsahovaCast&gt;
+    &lt;pokdef:ZaznamyObjektu&gt;
+        &lt;ZaznamObjektu xmlns=&quot;pokdef&quot;&gt;
+            &lt;ZapisObjektu xmlns=&quot;cmn&quot;&gt;r&lt;/ZapisObjektu&gt;
+            &lt;AtributyObjektu&gt;
+                &lt;SpolecneAtributyVsechObjektu xmlns=&quot;atr&quot;&gt;
+                    &lt;DatumVkladu&gt;2024-02-22T06:50:47&lt;/DatumVkladu&gt;
+                    &lt;DatumZmeny&gt;0001-01-01T00:00:00&lt;/DatumZmeny&gt;
+                    &lt;ID&gt;80000120001292394&lt;/ID&gt;
+                    &lt;IDEditora&gt;SUBJ-00004246&lt;/IDEditora&gt;
+                    &lt;IDZmeny&gt;CZ080-880009&lt;/IDZmeny&gt;
+                    &lt;PopisObjektu/&gt;
+                    &lt;VkladOsoba&gt;Eva Knopová&lt;/VkladOsoba&gt;
+                    &lt;ZmenaOsoba/&gt;
+                &lt;/SpolecneAtributyVsechObjektu&gt;
+                &lt;SpolecneAtributyObjektuDefinicnichBodu xmlns=&quot;atr&quot;&gt;
+                    &lt;ICS/&gt;
+                    &lt;UrovenUmisteniObjektuZPS&gt;0&lt;/UrovenUmisteniObjektuZPS&gt;
+                &lt;/SpolecneAtributyObjektuDefinicnichBodu&gt;
+                &lt;TypPozemniKomunikace xmlns=&quot;atr&quot;&gt;1&lt;/TypPozemniKomunikace&gt;
+                &lt;PrevazujiciPovrch xmlns=&quot;atr&quot;&gt;99&lt;/PrevazujiciPovrch&gt;
+            &lt;/AtributyObjektu&gt;
+            &lt;GeometrieObjektu&gt;
+                &lt;gml:pointProperty xmlns:gml=&quot;http://www.opengis.net/gml/3.2&quot;&gt;
+                    &lt;gml:Point gml:id=&quot;ID80000120001292394_04&quot; srsDimension=&quot;3&quot; srsName=&quot;EPSG:5514&quot;&gt;
+                        &lt;gml:pos&gt;-498189.97 -1087404.68 0.00&lt;/gml:pos&gt;
+                    &lt;/gml:Point&gt;
+                &lt;/gml:pointProperty&gt;
+            &lt;/GeometrieObjektu&gt;
+        &lt;/ZaznamObjektu&gt;
+        &lt;ZaznamObjektu xmlns=&quot;pokdef&quot;&gt;
+            &lt;ZapisObjektu xmlns=&quot;cmn&quot;&gt;r&lt;/ZapisObjektu&gt;
+            &lt;AtributyObjektu&gt;
+                &lt;SpolecneAtributyVsechObjektu xmlns=&quot;atr&quot;&gt;
+                    &lt;DatumVkladu&gt;2024-02-22T06:50:47&lt;/DatumVkladu&gt;
+                    &lt;DatumZmeny&gt;0001-01-01T00:00:00&lt;/DatumZmeny&gt;
+                    &lt;ID&gt;80000120001295705&lt;/ID&gt;
+                    &lt;IDEditora&gt;SUBJ-00004246&lt;/IDEditora&gt;
+                    &lt;IDZmeny&gt;CZ080-880009&lt;/IDZmeny&gt;
+                    &lt;PopisObjektu/&gt;
+                    &lt;VkladOsoba&gt;Eva Knopová&lt;/VkladOsoba&gt;
+                    &lt;ZmenaOsoba/&gt;
+                &lt;/SpolecneAtributyVsechObjektu&gt;
+                &lt;SpolecneAtributyObjektuDefinicnichBodu xmlns=&quot;atr&quot;&gt;
+                    &lt;ICS/&gt;
+                    &lt;UrovenUmisteniObjektuZPS&gt;0&lt;/UrovenUmisteniObjektuZPS&gt;
+                &lt;/SpolecneAtributyObjektuDefinicnichBodu&gt;
+                &lt;TypPozemniKomunikace xmlns=&quot;atr&quot;&gt;1&lt;/TypPozemniKomunikace&gt;
+                &lt;PrevazujiciPovrch xmlns=&quot;atr&quot;&gt;99&lt;/PrevazujiciPovrch&gt;
+            &lt;/AtributyObjektu&gt;
+            &lt;GeometrieObjektu&gt;
+                &lt;gml:pointProperty xmlns:gml=&quot;http://www.opengis.net/gml/3.2&quot;&gt;
+                    &lt;gml:Point gml:id=&quot;ID80000120001295705_04&quot; srsDimension=&quot;3&quot; srsName=&quot;EPSG:5514&quot;&gt;
+                        &lt;gml:pos&gt;-498352.50 -1087468.52 0.00&lt;/gml:pos&gt;
+                    &lt;/gml:Point&gt;
+                &lt;/gml:pointProperty&gt;
+            &lt;/GeometrieObjektu&gt;
+        &lt;/ZaznamObjektu&gt;
+    &lt;/pokdef:ZaznamyObjektu&gt;
+&lt;/objtyp:ProvozniPlochaPozemniKomunikaceDefinicniBod&gt;</code></pre>
+<p>Touto položkou skriptu</p>
+<pre><code>self.type_mapping_df = self.load_type_mapping()</code></pre>
+<p>se načte soubor načte se soubor typy_druhy.csv – ukázka:</p>
+<pre><code>162 plot|DruhPlotu
+166 schodiště|DruhSchodiste
+168 zeď|TypZdi</code></pre>
+<p>Znamená to, že objekt 162 plot je z hlediska stylů charakterizován atributem DruhPlotu (drátěný atd.).</p>
+<p>Vzhledem k tomu, že ve výše uvedeném nodu je</p>
+<p><strong>005 provozní plocha pozemní komunikace</strong></p>
+<p>Dojde k hledání v tomto souboru a vyhodnotí se to tak, že z hlediska stylů nemá charakteristický atribut (atributy) a základ klíče pro vyhledání stylu je tudíž jen</p>
+<p><strong>005 provozní plocha pozemní komunikace</strong></p>
+<p>bez další charakteristiky</p>
+<p>Klíč se doplní ještě o geometrii vrstvy, tady Point a v cyklu bude postupně hledáno ve stylech pro všechna měřítka s těmito klíči:</p>
+<pre><code>005 provozní plocha pozemní komunikace_Point_500
+005 provozní plocha pozemní komunikace_Point_5000
+005 provozní plocha pozemní komunikace_Point_10000
+005 provozní plocha pozemní komunikace_Point_25000</code></pre>
+<p>Matchne se jenom 500.</p>
+<h2 id="tady-ukážu-na-složitějším-nodu-jak-je-to-když-má-objekt-charakteristický-atribut-z-hlediska-stylů">Tady ukážu na složitějším nodu, jak je to, když má objekt charakteristický atribut z hlediska stylů:</h2>
+<pre><code>&lt;objtyp:Plot&gt;
+    &lt;plotli:ObjektovyTypNazev code_base=&quot;0100000162&quot; code_suffix=&quot;02&quot;&gt;plot&lt;/plotli:ObjektovyTypNazev&gt;
+    &lt;plotli:KategorieObjektu&gt;Součásti a příslušenství staveb&lt;/plotli:KategorieObjektu&gt;
+    &lt;plotli:SkupinaObjektu&gt;Stavba společná pro více skupin&lt;/plotli:SkupinaObjektu&gt;
+    &lt;plotli:ObsahovaCast&gt;ZPS&lt;/plotli:ObsahovaCast&gt;
+    &lt;plotli:ZaznamyObjektu&gt;
+        &lt;ZaznamObjektu xmlns=&quot;plotli&quot;&gt;
+            &lt;ZapisObjektu xmlns=&quot;cmn&quot;&gt;r&lt;/ZapisObjektu&gt;
+            &lt;AtributyObjektu&gt;
+                &lt;SpolecneAtributyVsechObjektu xmlns=&quot;atr&quot;&gt;
+                    &lt;DatumVkladu&gt;2024-10-10T13:31:55&lt;/DatumVkladu&gt;
+                    &lt;DatumZmeny&gt;2024-10-10T13:31:55&lt;/DatumZmeny&gt;
+                    &lt;ID&gt;80000050005336157&lt;/ID&gt;
+                    &lt;IDEditora&gt;SUBJ-00004246&lt;/IDEditora&gt;
+                    &lt;IDZmeny&gt;PGAD-F5E6C776-D82A-4265-906C-B10D5E46F561&lt;/IDZmeny&gt;
+                    &lt;PopisObjektu/&gt;
+                    &lt;VkladOsoba&gt;dummy&lt;/VkladOsoba&gt;
+                    &lt;ZmenaOsoba/&gt;
+                &lt;/SpolecneAtributyVsechObjektu&gt;
+                &lt;SpolecneAtributyObjektuZPS xmlns=&quot;atr&quot;&gt;
+                    &lt;ICS/&gt;
+                    &lt;TridaPresnostiPoloha&gt;4&lt;/TridaPresnostiPoloha&gt;
+                    &lt;TridaPresnostiVyska&gt;4&lt;/TridaPresnostiVyska&gt;
+                    &lt;UrovenUmisteniObjektuZPS&gt;0&lt;/UrovenUmisteniObjektuZPS&gt;
+                    &lt;ZpusobPorizeniZPS&gt;99&lt;/ZpusobPorizeniZPS&gt;
+                &lt;/SpolecneAtributyObjektuZPS&gt;
+                &lt;DruhPlotu xmlns=&quot;atr&quot;&gt;2&lt;/DruhPlotu&gt;
+                &lt;HraniceJinehoObjektu xmlns=&quot;atr&quot;&gt;0&lt;/HraniceJinehoObjektu&gt;
+            &lt;/AtributyObjektu&gt;
+            &lt;GeometrieObjektu&gt;
+                &lt;gml:curveProperty xmlns:gml=&quot;http://www.opengis.net/gml/3.2&quot;&gt;
+                    &lt;gml:LineString gml:id=&quot;ID80000050005336157_02&quot; srsDimension=&quot;3&quot; srsName=&quot;EPSG:5514&quot;&gt;
+                        &lt;gml:posList&gt;-498192.54 -1087425.46 278.72 -498179.66 -1087491.41 276.93 -498178.66 -1087500.00 276.52 -498173.33 -1087546.06 274.79 -498170.78 -1087585.64 273.23 -498168.76 -1087618.90 271.65 -498166.84 -1087641.67 270.10 -498166.71 -1087641.75 270.10&lt;/gml:posList&gt;
+                    &lt;/gml:LineString&gt;
+                &lt;/gml:curveProperty&gt;
+            &lt;/GeometrieObjektu&gt;
+        &lt;/ZaznamObjektu&gt;
+…</code></pre>
+<p>Zde je v souboru typy_druhy.csv dohledán</p>
+<p><strong>162 plot|DruhPlotu</strong></p>
+<p>V konkrétním případě je to 2, k tomu se dohledá v /xsd/common/atributy.xsd název, což je „drátěný“ a základ klíče pro vyhledání stylu je tudíž</p>
+<p><strong>162 plot - drátěný</strong></p>
+<p>Klíč se doplní ještě o geometrii vrstvy, tady LineString a v cyklu bude postupně hledáno ve stylech pro všechna měřítka s těmito klíči:</p>
+<pre><code>162 plot - drátěný_LineString_500
+162 plot - drátěný_LineString_5000
+162 plot - drátěný_LineString_10000
+162 plot - drátěný_LineString_25000</code></pre>
+<p>V prvních dvou případech se to matchne.</p>
+<h2 id="další-případ">Další případ:</h2>
+<pre><code>&lt;objtyp:TechnologickyObjektPlynovodniSiteBod&gt;
+    &lt;topbod:ObjektovyTypNazev code_base=&quot;0100000112&quot; code_suffix=&quot;01&quot;&gt;technologický objekt plynovodní sítě&lt;/topbod:ObjektovyTypNazev&gt;
+    &lt;topbod:KategorieObjektu&gt;Stavby technické infrastruktury&lt;/topbod:KategorieObjektu&gt;
+    &lt;topbod:SkupinaObjektu&gt;Plynovod&lt;/topbod:SkupinaObjektu&gt;
+    &lt;topbod:ObsahovaCast&gt;TI&lt;/topbod:ObsahovaCast&gt;
+    &lt;topbod:ZaznamyObjektu&gt;
+        &lt;topbod:ZaznamObjektu&gt;
+            &lt;cmn:ZapisObjektu&gt;r&lt;/cmn:ZapisObjektu&gt;
+            &lt;topbod:AtributyObjektu&gt;
+                &lt;atr:SpolecneAtributyVsechObjektu&gt;
+                    &lt;atr:ID&gt;00000100050601033&lt;/atr:ID&gt;
+                    &lt;atr:IDZmeny/&gt;
+                    &lt;atr:PopisObjektu&gt;regulační stanice plynu&lt;/atr:PopisObjektu&gt;
+                    &lt;atr:IDEditora&gt;SUBJ-00000100&lt;/atr:IDEditora&gt;
+                    &lt;atr:DatumVkladu&gt;2024-10-01T00:00:00&lt;/atr:DatumVkladu&gt;
+                    &lt;atr:VkladOsoba&gt;SYSTEM&lt;/atr:VkladOsoba&gt;
+                    &lt;atr:DatumZmeny&gt;2024-08-08T14:25:35&lt;/atr:DatumZmeny&gt;
+                    &lt;atr:ZmenaOsoba&gt;SYSTEM&lt;/atr:ZmenaOsoba&gt;
+                &lt;/atr:SpolecneAtributyVsechObjektu&gt;
+                &lt;atr:SpolecneAtributyObjektuTI&gt;
+                    &lt;atr:IDVlastnika&gt;SUBJ-00008241&lt;/atr:IDVlastnika&gt;
+                    &lt;atr:IDSpravce&gt;SUBJ-00008241&lt;/atr:IDSpravce&gt;
+                    &lt;atr:IDExterni&gt;5000298541&lt;/atr:IDExterni&gt;
+                    &lt;atr:NeuplnaData&gt;true&lt;/atr:NeuplnaData&gt;
+                    &lt;atr:UrovenUmisteniObjektuTI&gt;0&lt;/atr:UrovenUmisteniObjektuTI&gt;
+                    &lt;atr:TridaPresnostiPoloha&gt;9&lt;/atr:TridaPresnostiPoloha&gt;
+                    &lt;atr:TridaPresnostiVyska&gt;9&lt;/atr:TridaPresnostiVyska&gt;
+                    &lt;atr:ZpusobPorizeniTI&gt;6&lt;/atr:ZpusobPorizeniTI&gt;
+                &lt;/atr:SpolecneAtributyObjektuTI&gt;
+                &lt;atr:StavObjektu&gt;0&lt;/atr:StavObjektu&gt;
+                &lt;atr:TlakovaHladinaPlynovodniSite&gt;99&lt;/atr:TlakovaHladinaPlynovodniSite&gt;
+                &lt;atr:TypTechnologickehoObjektuPlynovodniSite&gt;2&lt;/atr:TypTechnologickehoObjektuPlynovodniSite&gt;
+            &lt;/topbod:AtributyObjektu&gt;
+            &lt;topbod:GeometrieObjektu&gt;
+                &lt;gml:pointProperty xlink:type=&quot;simple&quot;&gt;
+                    &lt;gml:Point srsName=&quot;EPSG:5514&quot; srsDimension=&quot;3&quot; gml:id=&quot;ID100050601033_01&quot;&gt;
+                        &lt;gml:pos&gt;-738172.22 -1042152.65 0.0&lt;/gml:pos&gt;
+                    &lt;/gml:Point&gt;
+                &lt;/gml:pointProperty&gt;
+            &lt;/topbod:GeometrieObjektu&gt;
+        &lt;/topbod:ZaznamObjektu&gt;
+    &lt;/topbod:ZaznamyObjektu&gt;
+&lt;/objtyp:TechnologickyObjektPlynovodniSiteBod&gt;</code></pre>
+<p>Zde je v souboru typy_druhy.csv dohledán</p>
+<p><strong>112 technologický objekt plynovodní sítě|TlakovaHladinaPlynovodniSite</strong></p>
+<p>V konkrétním případě je to 99, k tomu se dohledá v /xsd/common/atributy.xsd název, což je „nezjištěno/neurčeno“ a základ klíče pro vyhledání stylu je tudíž</p>
+<p><strong>112 technologický objekt plynovodní sítě - nezjištěno/neurčeno</strong></p>
+<p>Klíč se doplní ještě o geometrii vrstvy, tady Point a v cyklu bude postupně hledáno ve stylech pro všechna měřítka s těmito klíči:</p>
+<pre><code>112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point_500
+112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point _5000
+112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point _10000
+112 technologický objekt plynovodní sítě - nezjištěno/neurčeno_Point _25000</code></pre>
+<p>Nematchne se ale nic, protože klíč je ve styles2.csv z nějakého důvodu</p>
+<p><strong>112 technologický objekt plynovodní sítě - nezjištěno_Point_500</strong></p>
+<p>S tím ale počítám a ještě zkouším</p>
+<pre><code>112 technologický objekt plynovodní sítě - nezjištěno _Point_500
+112 technologický objekt plynovodní sítě - nezjištěno _Point _5000
+112 technologický objekt plynovodní sítě - nezjištěno _Point _10000
+112 technologický objekt plynovodní sítě - nezjištěno _Point _25000</code></pre>
+<p>To se už matchne na prvním.</p>
+<p>Kdyby to ani tak nevyšlo, zkouším ještě s „neurčeno“.</p>
+<h2 id="poslední-ukázka">Poslední ukázka:</h2>
+<pre><code>&lt;objtyp:ZarizeniPlynovodniSite&gt;
+    &lt;zaplsi:ObjektovyTypNazev code_base=&quot;0100000111&quot; code_suffix=&quot;01&quot;&gt;zařízení plynovodní sítě&lt;/zaplsi:ObjektovyTypNazev&gt;
+    &lt;zaplsi:KategorieObjektu&gt;Stavby technické infrastruktury&lt;/zaplsi:KategorieObjektu&gt;
+    &lt;zaplsi:SkupinaObjektu&gt;Plynovod&lt;/zaplsi:SkupinaObjektu&gt;
+    &lt;zaplsi:ObsahovaCast&gt;TI&lt;/zaplsi:ObsahovaCast&gt;
+    &lt;zaplsi:ZaznamyObjektu&gt;
+        &lt;zaplsi:ZaznamObjektu&gt;
+            &lt;cmn:ZapisObjektu&gt;r&lt;/cmn:ZapisObjektu&gt;
+            &lt;zaplsi:AtributyObjektu&gt;
+                &lt;atr:SpolecneAtributyVsechObjektu&gt;
+                    &lt;atr:ID&gt;00000100050601073&lt;/atr:ID&gt;
+                    &lt;atr:IDZmeny/&gt;
+                    &lt;atr:PopisObjektu&gt;Hlavní uzávěr plynu&lt;/atr:PopisObjektu&gt;
+                    &lt;atr:IDEditora&gt;SUBJ-00000100&lt;/atr:IDEditora&gt;
+                    &lt;atr:DatumVkladu&gt;2024-10-01T00:00:00&lt;/atr:DatumVkladu&gt;
+                    &lt;atr:VkladOsoba&gt;SYSTEM&lt;/atr:VkladOsoba&gt;
+                    &lt;atr:DatumZmeny&gt;2024-08-08T14:26:14&lt;/atr:DatumZmeny&gt;
+                    &lt;atr:ZmenaOsoba&gt;SYSTEM&lt;/atr:ZmenaOsoba&gt;
+                &lt;/atr:SpolecneAtributyVsechObjektu&gt;
+                &lt;atr:SpolecneAtributyObjektuTI&gt;
+                    &lt;atr:IDVlastnika&gt;SUBJ-00008241&lt;/atr:IDVlastnika&gt;
+                    &lt;atr:IDSpravce&gt;SUBJ-00008241&lt;/atr:IDSpravce&gt;
+                    &lt;atr:IDExterni&gt;DIC_730891_HUP_3&lt;/atr:IDExterni&gt;
+                    &lt;atr:NeuplnaData&gt;true&lt;/atr:NeuplnaData&gt;
+                    &lt;atr:UrovenUmisteniObjektuTI&gt;0&lt;/atr:UrovenUmisteniObjektuTI&gt;
+                    &lt;atr:TridaPresnostiPoloha&gt;9&lt;/atr:TridaPresnostiPoloha&gt;
+                    &lt;atr:TridaPresnostiVyska&gt;9&lt;/atr:TridaPresnostiVyska&gt;
+                    &lt;atr:ZpusobPorizeniTI&gt;6&lt;/atr:ZpusobPorizeniTI&gt;
+                &lt;/atr:SpolecneAtributyObjektuTI&gt;
+                &lt;atr:StavObjektu&gt;0&lt;/atr:StavObjektu&gt;
+                &lt;atr:TypZarizeniPlynovodniSite&gt;0&lt;/atr:TypZarizeniPlynovodniSite&gt;
+                &lt;atr:UmisteniObjektu&gt;99&lt;/atr:UmisteniObjektu&gt;
+            &lt;/zaplsi:AtributyObjektu&gt;
+            &lt;zaplsi:GeometrieObjektu&gt;
+                &lt;gml:pointProperty xlink:type=&quot;simple&quot;&gt;
+                    &lt;gml:Point srsName=&quot;EPSG:5514&quot; srsDimension=&quot;3&quot; gml:id=&quot;ID100050601073_01&quot;&gt;
+                        &lt;gml:pos&gt;-737564.56 -1042004.58 0.0&lt;/gml:pos&gt;
+                    &lt;/gml:Point&gt;
+                &lt;/gml:pointProperty&gt;
+            &lt;/zaplsi:GeometrieObjektu&gt;
+        &lt;/zaplsi:ZaznamObjektu&gt;
+        &lt;zaplsi:ZaznamObjektu&gt;
+            &lt;cmn:ZapisObjektu&gt;r&lt;/cmn:ZapisObjektu&gt;
+            &lt;zaplsi:AtributyObjektu&gt;
+                &lt;atr:SpolecneAtributyVsechObjektu&gt;
+                    &lt;atr:ID&gt;XXXXXXXXX&lt;/atr:ID&gt;
+                    &lt;atr:IDZmeny/&gt;
+                    &lt;atr:PopisObjektu&gt;Hlavní uzávěr plynu&lt;/atr:PopisObjektu&gt;
+                    &lt;atr:IDEditora&gt;SUBJ-00000100&lt;/atr:IDEditora&gt;
+                    &lt;atr:DatumVkladu&gt;2024-10-01T00:00:00&lt;/atr:DatumVkladu&gt;
+                    &lt;atr:VkladOsoba&gt;SYSTEM&lt;/atr:VkladOsoba&gt;
+                    &lt;atr:DatumZmeny&gt;2024-08-08T14:26:14&lt;/atr:DatumZmeny&gt;
+                    &lt;atr:ZmenaOsoba&gt;SYSTEM&lt;/atr:ZmenaOsoba&gt;
+                &lt;/atr:SpolecneAtributyVsechObjektu&gt;
+                &lt;atr:SpolecneAtributyObjektuTI&gt;
+                    &lt;atr:IDVlastnika&gt;SUBJ-00008241&lt;/atr:IDVlastnika&gt;
+                    &lt;atr:IDSpravce&gt;SUBJ-00008241&lt;/atr:IDSpravce&gt;
+                    &lt;atr:IDExterni&gt;DIC_730891_HUP_4&lt;/atr:IDExterni&gt;
+                    &lt;atr:NeuplnaData&gt;true&lt;/atr:NeuplnaData&gt;
+                    &lt;atr:UrovenUmisteniObjektuTI&gt;0&lt;/atr:UrovenUmisteniObjektuTI&gt;
+                    &lt;atr:TridaPresnostiPoloha&gt;9&lt;/atr:TridaPresnostiPoloha&gt;
+                    &lt;atr:TridaPresnostiVyska&gt;9&lt;/atr:TridaPresnostiVyska&gt;
+                    &lt;atr:ZpusobPorizeniTI&gt;6&lt;/atr:ZpusobPorizeniTI&gt;
+                &lt;/atr:SpolecneAtributyObjektuTI&gt;
+                &lt;atr:StavObjektu&gt;0&lt;/atr:StavObjektu&gt;
+                &lt;atr:TypZarizeniPlynovodniSite&gt;0&lt;/atr:TypZarizeniPlynovodniSite&gt;
+                &lt;atr:UmisteniObjektu&gt;99&lt;/atr:UmisteniObjektu&gt;
+            &lt;/zaplsi:AtributyObjektu&gt;
+            &lt;zaplsi:GeometrieObjektu&gt;
+                &lt;gml:pointProperty xlink:type=&quot;simple&quot;&gt;
+                    &lt;gml:Point srsName=&quot;EPSG:5514&quot; srsDimension=&quot;3&quot; gml:id=&quot;XXXXXXXXXX&quot;&gt;
+                        &lt;gml:pos&gt;-XXXXXXX.XX -XXXXXXXX.XX 0.0&lt;/gml:pos&gt;
+                    &lt;/gml:Point&gt;
+                &lt;/gml:pointProperty&gt;
+            &lt;/zaplsi:GeometrieObjektu&gt;
+        &lt;/zaplsi:ZaznamObjektu&gt;
+    &lt;/zaplsi:ZaznamyObjektu&gt;
+&lt;/objtyp:ZarizeniPlynovodniSite&gt;</code></pre>
+<p>Zde je v souboru typy_druhy.csv dohledán</p>
+<p><strong>111 zařízení plynovodní sítě|TypZarizeniPlynovodniSite</strong></p>
+<p>V konkrétním případě je to 0, k tomu se dohledá v /xsd/common/atributy.xsd název, což je „neveřejný údaj“.</p>
+<p>Takový styl obecně není, tak rovnou zkouším různé defaultní hodnoty podle xsd je postupně takto:</p>
+<pre><code>0 vynechávám, pokud je to neveřejný údaj, 
+pak zkouším 99 (jiná, jiný, jiné) , pokud v xsd k tomu typu 99 je, 
+pak zkouším 98 (nezjištěno/neručeno) na všechny tři kominace, pokud v xsd k tomu typu 98 je.</code></pre>
+<p>Matchne se</p>
+<p><strong>111 zařízení plynovodní sítě - jiné_Point_500</strong></p>
+</body>
+</html>
