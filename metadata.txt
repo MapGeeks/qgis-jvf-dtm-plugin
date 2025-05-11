@@ -5,7 +5,7 @@
 [general]
 name=qgis-jvf-dmvs-plugin
 qgisMinimumVersion=3.0
-version=0.1
+version=1.0.1
 author=Linda Karlovská, Petr Barandovski
 email=mapgeekscz@gmail.com
 
@@ -25,7 +25,7 @@ hasProcessingProvider=no
 # Tags are comma separated with spaces allowed
 tags=python
 
-homepage=hhttps://github.com/MapGeeks/qgis-jvf-dmvs-plugin
+homepage=https://github.com/MapGeeks/qgis-jvf-dmvs-plugin
 category=Vector
 icon=icon.png
 # experimental flag
