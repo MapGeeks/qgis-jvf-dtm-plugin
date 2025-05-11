@@ -1,19 +1,20 @@
-# Instalace
+# Instalace z QGIS Plugin repozitáře
 
-Nejprve si plugin stáhněte z GitHubu:
+Spusťte QGIS a klikněte na menu "Zásuvné moduly" -> "Správa a instalace Zásuvných modulů ...". 
+![Správa a instalace zásuvných modulů](img/sprava-zasuvnych-modulu.png "Správa a instalace zásuvných modulů")
+V otevřeném dialogovém okně přejděte do záložky "Not installed". 
+Napište klíčové slovo "DTM" a stiskněte Enter. 
+Zobrazí se jeden nalezený plugin s názvem JVF DTM Plugin.
+V dalším kroku klikněte na tlačítko "Instalovat zásuvný modul" v pravém dolním rohu.
 
-![Stažení pluginu z GitHubu](img/stazeni_z_githubu.png "Stažení modulu z githubu").
+# Instalace z GitHubu (pro testování jiných verzí pluginu)
 
-Spusťte QGIS a klikněte na menu "Zásuvné moduly" -> "Správa a instalace Zásuvných modulů ..." -> "Instalovat ze ZIPu" -> najděte ZIP s pluginem a dejte "Instalovat zásuvný modul".
+Plugin si nejprve stáhněte z GitHubu jako ZIP soubor.
+Dále spusťte QGIS a klikněte na menu "Zásuvné moduly" -> "Správa a instalace Zásuvných modulů ...".
+V otevřeném dialogovém okně přejděte do záložky "Instalovat ze ZIPu". 
+Najděte ZIP soubor s pluginem a klikněte na "Instalovat zásuvný modul".
 
-![Správa a instalace zásuvných modulů](img/sprava-zasuvnych-modulu.png "Správa a instalace zásuvných modulů").
 
-![Instalovat ze ZIPu](img/instalace-modulu-ze-zipu.png "Instalovat ze ZIPu").
-
-Pokud nevidíte následující ikonku
-![Ikonka](img/plugin-ikona.png "Ikonka").
-klikněte na menu "Zobrazit" -> "Nástrojové lišty" a zatrhněte "Panel nástrojů Zásuvné moduly"
-![Zobrazit nástrojové lišty - zásuvné moduly](img/zobrazeni-zasuvnych-modulu.png "Zobrazit nástrojové lišty - zásuvné moduly").
 
 
 
