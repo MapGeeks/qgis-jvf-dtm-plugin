@@ -3,12 +3,15 @@
 Klikněte na ikonku 
 ![Ikonka](img/plugin-ikona.png "Ikonka").
 
-a vyskočí na Vás následující dialogové okno:
+Pokud tuto ikonku nevidíte, klikněte na menu "Zobrazit" -> "Nástrojové lišty" a zatrhněte "Panel nástrojů Zásuvné moduly"
+![Zobrazit nástrojové lišty - zásuvné moduly](img/zobrazeni-zasuvnych-modulu.png "Zobrazit nástrojové lišty - zásuvné moduly").
+
+Po kliknutí na ikonku na Vás vyskočí následující dialogové okno:
 ![Dialogové okno - otevřít](img/nacteni-souboru.png "Dialogové okno - otevřít").
 
 Otevřete požadovaný JVF soubor a vyčkejte až se načte.
 
-Výsledek můž vypadat například takto:
+Výsledek může vypadat například takto:
 ![Zobrazený soubor JVF](img/zobrazeni-qgis.png "Zobrazený soubor JVF").
 
 Pokud chcete vidět atributy konkrétního objektu, klikněte na tuto ikonu:
