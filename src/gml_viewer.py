@@ -22,6 +22,8 @@ from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 
 from .czech_dtm_parser import CzechDTMParser
+from .dxf import export_layers_to_dxf_with_inverted_grayscale
+from .gpkg import export_layers_to_geopackage
 
 
 class GMLViewer:
@@ -111,6 +113,15 @@ class GMLViewer:
             callback=self.run,
             parent=self.iface.mainWindow(),
         )
+        
+        icon_path_dxf = self.plugin_dir / "../icons/iconOut.png"
+        self.add_action(
+            icon_path_dxf,
+            text="JVF DTM Viewer - export to DXF",
+            callback=self.run_dxf,
+            parent=self.iface.mainWindow(),
+        )
+        
         self.first_start = True
 
     def unload(self):
@@ -133,3 +144,17 @@ class GMLViewer:
         self.parser.parse_file(filename)
 
         # Zde už se nevypisuje žádná zpráva - zpětná vazba je zajištěna v DTMParserTask.finished
+    
+    def run_dxf(self) -> None:
+        """Run method that performs export to DXF"""
+        filename, _ = QFileDialog.getSaveFileName(
+            None, "Select Output File", "", "DXF (*.dxf);;GeoPackage (*.gpkg)"
+        )
+        if not filename:
+            return
+        if filename.lower().endswith('.dxf'):
+            filename = filename[:-4]
+            export_layers_to_dxf_with_inverted_grayscale(filename)
+        if filename.lower().endswith('.gpkg'):
+            filename = filename[:-5]
+            export_layers_to_geopackage(filename)
