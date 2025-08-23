@@ -1,8 +1,8 @@
 """
-@brief Plugin Implementation of Czech DTM QGIS Viewer
+@brief Plugin Implementation of Czech JVF DTM Viewer
 
 Classes:
- - GMLViewer
+ - JVFDTMViewer
 
 (C) 2024-2025 by MapGeeks
 @author Petr Barandovski petr.barandovski@gmail.com
@@ -24,7 +24,7 @@ from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from .czech_dtm_parser import CzechDTMParser
 
 
-class GMLViewer:
+class JVFDTMViewer:
     """QGIS Plugin Implementation."""
 
     def __init__(self, iface):

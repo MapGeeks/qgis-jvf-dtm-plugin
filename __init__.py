@@ -14,10 +14,10 @@
 """
 
 def classFactory(iface):
-    """Load GMLViewer class from file GMLViewer.
+    """Load plugin.
     
-    :param iface: A QGIS interface instance.
+    :param iface: QGIS interface.
     :type iface: QgsInterface
     """
-    from .src.gml_viewer import GMLViewer
-    return GMLViewer(iface)
+    from .jvf_dtm_viewer import JVFDTMViewer
+    return JVFDTMViewer(iface)
