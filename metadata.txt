@@ -5,12 +5,12 @@ version=1.2.0
 author=Linda Karlovská, Petr Barandovski
 email=mapgeekscz@gmail.com
 
-description=Displays Czech digital technical map data (DTM JVF format) directly in QGIS.\n\nUmožňuje zobrazit data digitální technické mapy (DTM) ve formátu JVF přímo v QGISu.
+description=Displays Czech digital technical map data (DTM JVF format) directly in QGIS. Umožňuje zobrazit data digitální technické mapy (DTM) ve formátu JVF přímo v QGISu.
 
-about=Loads JVF DTM files into QGIS and organizes features into layer groups. Each layer is automatically styled using predefined symbology. Files are processed in the background to keep QGIS responsive during loading.\n Načítá soubory digitální technické mapy (DTM) ve formátu JVF do QGISu a organizuje prvky do skupin vrstev. Každé vrstvě je automaticky přiřazen předdefinovaný styl. Načítání probíhá na pozadí, takže QGIS zůstává během procesu plně responzivní.
+about=Loads JVF DTM files into QGIS and organizes features into layer groups. Each layer is automatically styled using predefined symbology. Files are processed in the background to keep QGIS responsive during loading. Načítá soubory digitální technické mapy (DTM) ve formátu JVF do QGISu a organizuje prvky do skupin vrstev. Každé vrstvě je automaticky přiřazen předdefinovaný styl. Načítání probíhá na pozadí, takže QGIS zůstává během procesu plně responzivní.
 
-tags=python, gdal, JVF, DTM
-changelog=Version 1.2.0:\n- Background loading of files\n- Improved zooming\n- Layer grouping by file\n- Updated metadata and licensing
+tags=python, JVF, DTM, DMVS, digitální technická mapa
+changelog=Version 1.2.0: Background loading of files, improved zooming, layer grouping by file and updated metadata and licensing.
 
 tracker=https://github.com/MapGeeks/qgis-jvf-dtm-plugin/issues
 repository=https://github.com/MapGeeks/qgis-jvf-dtm-plugin
