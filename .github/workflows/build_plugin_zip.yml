@@ -1,4 +1,4 @@
-name: Build QGIS plugin zip package
+name: Build QGIS plugin zip package + MkDocs
 
 on:
   push:
@@ -24,7 +24,13 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python3 -m pip install pb_tool
+        python3 -m pip install pb_tool mkdocs mkdocs-material
+
+    - name: Build MkDocs site and copy to plugin
+      run: |
+        mkdocs build --clean
+        rm -rf docs
+        cp -r site docs
 
     - name: Build package
       run: |
@@ -40,3 +46,9 @@ jobs:
         name: qgis-jvf-dtm-plugin
         path: zip_build/
         if-no-files-found: error
+
+    - name: Deploy MkDocs to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./site

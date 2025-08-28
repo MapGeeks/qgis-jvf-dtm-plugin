@@ -4,6 +4,7 @@ qgisMinimumVersion=3.0
 version=1.2.0
 author=Linda Karlovská, Petr Barandovski
 email=mapgeekscz@gmail.com
+helpPath=docs/index.html
 
 description=Displays Czech digital technical map data (DTM JVF format) directly in QGIS. Umožňuje zobrazit data digitální technické mapy (DTM) ve formátu JVF přímo v QGISu.
 
