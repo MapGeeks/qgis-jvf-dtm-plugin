@@ -1,17 +1,24 @@
-# Welcome to MkDocs
+# QGIS plugin pro digitální technickou mapu
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Tento **QGIS plugin** umožňuje načítání a vizualizaci **digitální technické mapy (DTM)** ve formátu **JVF**.  
+Umožňuje jednoduché zobrazení vrstev dopravní infrastruktury, technické infrastruktury a základní prostorové situace přímo v prostředí **QGIS**.  
 
-## Commands
+- **Podporovaná verze formátu:** **1.4.3**  
+- **Autoři:** **MapGeeks – Linda Karlovská & Petr Barandovski**  
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+---
 
-## Project layout
+## 🔹 Hlavní funkce
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+✅ **Načítání JVF souborů** – Import DTM dat z formátu JVF včetně podpory více vrstev.  
+✅ **Interaktivní vizualizace** – Zobrazení prvků s možností zvýraznění a prohlížení atributů.  
+✅ **Podpora 3D geometrií** – Práce s výškovými daty včetně jejich správného zobrazení.  
+✅ **Efektivní práce s více geometriemi** – Oddělené zpracování hlavní a doplňkové geometrie.  
+✅ **Snadné ovládání** – Intuitivní uživatelské rozhraní dostupné přímo v QGIS.  
+
+---
+
+## 🔹 Ukázka načtených dat
+
+![Ukázka načtených dat](img/nactena_data.png)
+

@@ -1,1 +1,9 @@
-site_name: My Docs
+site_name: QGIS JVF DTM Plugin
+repo_url: https://github.com/MapGeeks/qgis-jvf-dtm-plugin
+nav:
+  - Úvod: index.md
+  - Instalace: instalace.md
+  - Použití: pouziti.md
+  - Logika stylování: logika-stylovani.md
+theme:
+  name: material

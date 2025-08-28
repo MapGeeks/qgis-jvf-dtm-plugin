@@ -11,6 +11,12 @@ env/
 # Ignorování souborů z IDE
 .vscode/
 
+# MkDocs build output
+site/
+
+# ZIP buildy
 zip_build/
+
+# Rozbalená ukázková data
 sample_data/*.xml
 *~
