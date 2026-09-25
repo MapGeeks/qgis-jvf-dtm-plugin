@@ -22,6 +22,9 @@ from typing import Dict, Any, Optional
 from pathlib import Path
 import pandas as pd
 
+from qgis.core import Qgis
+from qgis.PyQt.QtCore import QMetaType, QVariant
+
 logger = logging.getLogger(__name__)
 
 
@@ -90,3 +93,16 @@ def load_type_mapping() -> Optional[pd.DataFrame]:
     except Exception as e:
         logger.error(f"Error loading type mapping: {e}")
         return None
+
+
+def string_field_type():
+    """
+    Vrátí typ pro textový atribut použitelný v konstruktoru QgsField.
+
+    QGIS 4 (Qt6) už nepřijímá QVariant.Type, konstruktor s QMetaType.Type
+    je dostupný od QGIS 3.38. Pro starší QGIS 3 (např. 3.34 LTR) se proto
+    použije původní QVariant.String.
+    """
+    if Qgis.versionInt() >= 33800:
+        return QMetaType.Type.QString
+    return QVariant.String

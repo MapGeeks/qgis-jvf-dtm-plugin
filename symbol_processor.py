@@ -16,13 +16,13 @@ the Free Software Foundation, either version 3 of the License, or
 
 from typing import Dict, Optional, Any
 from qgis.core import (
-    QgsSymbol, QgsLineSymbol, QgsMarkerSymbol, QgsFillSymbol,
+    Qgis, QgsSymbol, QgsLineSymbol, QgsMarkerSymbol, QgsFillSymbol,
     QgsSimpleMarkerSymbolLayer, QgsSvgMarkerSymbolLayer,
     QgsSimpleLineSymbolLayer, QgsSimpleFillSymbolLayer,
-    QgsSimpleMarkerSymbolLayerBase, QgsSymbolLayer
+    QgsSymbolLayer
 )
-from PyQt5.QtGui import QColor
-from PyQt5.QtCore import Qt, QPointF
+from qgis.PyQt.QtGui import QColor
+from qgis.PyQt.QtCore import Qt, QPointF
 import logging
 
 logger = logging.getLogger(__name__)
@@ -50,16 +50,16 @@ class SymbolProcessor:
         }
 
         self.shape_map = {
-            'square': QgsSimpleMarkerSymbolLayerBase.Square,
-            'diamond': QgsSimpleMarkerSymbolLayerBase.Diamond,
-            'circle': QgsSimpleMarkerSymbolLayerBase.Circle,
-            'triangle': QgsSimpleMarkerSymbolLayerBase.Triangle,
-            'pentagon': QgsSimpleMarkerSymbolLayerBase.Pentagon,
-            'hexagon': QgsSimpleMarkerSymbolLayerBase.Hexagon,
-            'star': QgsSimpleMarkerSymbolLayerBase.Star,
-            'arrow': QgsSimpleMarkerSymbolLayerBase.Arrow,
-            'cross': QgsSimpleMarkerSymbolLayerBase.Cross,
-            'cross2': QgsSimpleMarkerSymbolLayerBase.Cross2
+            'square': Qgis.MarkerShape.Square,
+            'diamond': Qgis.MarkerShape.Diamond,
+            'circle': Qgis.MarkerShape.Circle,
+            'triangle': Qgis.MarkerShape.Triangle,
+            'pentagon': Qgis.MarkerShape.Pentagon,
+            'hexagon': Qgis.MarkerShape.Hexagon,
+            'star': Qgis.MarkerShape.Star,
+            'arrow': Qgis.MarkerShape.Arrow,
+            'cross': Qgis.MarkerShape.Cross,
+            'cross2': Qgis.MarkerShape.Cross2
         }
 
     def create_symbol_from_json(self, symbol_dict: Dict[str, Any]) -> Optional[QgsSymbol]:
@@ -187,7 +187,7 @@ class SymbolProcessor:
             layer.setWidth(float(properties['width']))
         
         if 'line_style' in properties:
-            layer.setPenStyle(Qt.SolidLine if properties['line_style'] == 'solid' else Qt.DashLine)
+            layer.setPenStyle(Qt.PenStyle.SolidLine if properties['line_style'] == 'solid' else Qt.PenStyle.DashLine)
         
         if properties.get('use_custom_dash') == '1' and 'customdash' in properties:
             pattern = [float(x) for x in properties['customdash'].split(';')]
@@ -204,7 +204,7 @@ class SymbolProcessor:
             layer.setStrokeWidth(float(properties['outline_width']))
         
         if 'style' in properties:
-            layer.setBrushStyle(Qt.SolidPattern)
+            layer.setBrushStyle(Qt.BrushStyle.SolidPattern)
 
     def clear_cache(self) -> None:
         """Vyčistí cache symbolů"""
