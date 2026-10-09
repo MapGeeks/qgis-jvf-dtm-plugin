@@ -19,9 +19,9 @@ from typing import Dict, List, Optional
 import lxml.etree as ET
 
 from qgis.core import QgsVectorLayer, QgsField
-from PyQt5.QtCore import QVariant
 
 from .schema_loader import XSDSchemaLoader
+from .helpers import string_field_type
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ class AttributeProcessor:
         Returns:
             List[QgsField]: Seznam atributů pro vrstvu.
         """
-        attributes = [QgsField("gml_id", QVariant.String)]
+        attributes = [QgsField("gml_id", string_field_type())]
         seen_fields = {"gml_id"}
 
         root = ET.ElementTree(element)
@@ -73,7 +73,7 @@ class AttributeProcessor:
             for elem in atributy:
                 field_name = elem.tag.replace("{atr}", "")
                 if field_name not in seen_fields and field_name != "AtributyObjektu":
-                    qgs_field = QgsField(field_name, QVariant.String)
+                    qgs_field = QgsField(field_name, string_field_type())
                     qgs_field.setAlias(
                         self.schema_documentation.get(field_name, field_name)
                     )

@@ -1,5 +1,5 @@
 from qgis.core import QgsTask
-from PyQt5.QtCore import pyqtSignal
+from qgis.PyQt.QtCore import pyqtSignal
 
 import logging
 
@@ -13,7 +13,7 @@ class DTMParserTask(QgsTask):
     taskCompleted = pyqtSignal(bool)
 
     def __init__(self, description, parser, filename, namespaces):
-        super().__init__(description, QgsTask.CanCancel)
+        super().__init__(description, QgsTask.Flag.CanCancel)
         self.parser = parser
         self.filename = filename
         self.exception = None
@@ -89,7 +89,7 @@ class DTMParserTask(QgsTask):
             self.parser._finalize_project_tree()
 
             # Zoom provedeme také s krátkým zpožděním
-            from PyQt5.QtCore import QTimer
+            from qgis.PyQt.QtCore import QTimer
 
             QTimer.singleShot(500, self.parser._zoom_to_data)
 
