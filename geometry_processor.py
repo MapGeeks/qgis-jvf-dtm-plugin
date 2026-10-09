@@ -19,7 +19,7 @@ import lxml.etree as ET
 from typing import Dict, Tuple, Optional, Generator
 from osgeo import ogr
 
-from qgis.core import QgsGeometry, QgsWkbTypes
+from qgis.core import Qgis, QgsGeometry
 
 logger = logging.getLogger(__name__)
 
@@ -43,18 +43,18 @@ class GeometryProcessor:
             Textový popis typu geometrie nebo None
         """
         type_mapping = {
-            QgsWkbTypes.Point: "Point",
-            QgsWkbTypes.PointZ: "Point",
-            QgsWkbTypes.MultiPoint: "Point",
-            QgsWkbTypes.MultiPointZ: "Point",
-            QgsWkbTypes.LineString: "LineString",
-            QgsWkbTypes.LineStringZ: "LineString",
-            QgsWkbTypes.MultiLineString: "LineString",
-            QgsWkbTypes.MultiLineStringZ: "LineString",
-            QgsWkbTypes.Polygon: "Polygon",
-            QgsWkbTypes.PolygonZ: "Polygon",
-            QgsWkbTypes.MultiPolygon: "Polygon",
-            QgsWkbTypes.MultiPolygonZ: "Polygon",
+            Qgis.WkbType.Point: "Point",
+            Qgis.WkbType.PointZ: "Point",
+            Qgis.WkbType.MultiPoint: "Point",
+            Qgis.WkbType.MultiPointZ: "Point",
+            Qgis.WkbType.LineString: "LineString",
+            Qgis.WkbType.LineStringZ: "LineString",
+            Qgis.WkbType.MultiLineString: "LineString",
+            Qgis.WkbType.MultiLineStringZ: "LineString",
+            Qgis.WkbType.Polygon: "Polygon",
+            Qgis.WkbType.PolygonZ: "Polygon",
+            Qgis.WkbType.MultiPolygon: "Polygon",
+            Qgis.WkbType.MultiPolygonZ: "Polygon",
         }
 
         return type_mapping.get(qgs_geom.wkbType())

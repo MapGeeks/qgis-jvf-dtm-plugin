@@ -122,7 +122,7 @@ class CzechDTMParser:
         """
         Hlavní metoda pro parsování DTM souboru - používá neblokující přístup.
         """
-        from PyQt5.QtCore import QEventLoop
+        from qgis.PyQt.QtCore import QEventLoop
 
         root = QgsProject.instance().layerTreeRoot()
 
@@ -159,7 +159,7 @@ class CzechDTMParser:
 
         # "Čekáme" na dokončení úlohy - ale ve skutečnosti necháváme Qt zpracovávat události
         # To znamená, že UI zůstává responzivní
-        loop.exec_()
+        loop.exec()
 
         # Nyní je úloha dokončena, můžeme finalizovat vrstvy v hlavním vlákně
         if hasattr(task, "success") and task.success:
@@ -190,7 +190,7 @@ class CzechDTMParser:
         Hromadně přidá všechny vrstvy do projektu a struktury skupin.
         Tato metoda musí běžet v hlavním vlákně.
         """
-        from PyQt5.QtCore import QCoreApplication
+        from qgis.PyQt.QtCore import QCoreApplication
 
         project = QgsProject.instance()
         root = project.layerTreeRoot()
@@ -901,7 +901,7 @@ class CzechDTMParser:
         Funkce pro zoom na data - centruje mapu na všechna načtená data
         a nastavuje měřítko podle největšího rozsahu z rendererů.
         """
-        from PyQt5.QtCore import QTimer
+        from qgis.PyQt.QtCore import QTimer
 
         def do_zoom():
             # Získáme všechny vektorové vrstvy

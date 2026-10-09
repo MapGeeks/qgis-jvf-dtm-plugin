@@ -67,7 +67,7 @@ class JVFDTMViewer:
         """Display a message box with the given message and icon."""
         msg_box = QMessageBox()
         msg_box.setText(message)
-        msg_box.setIcon(QMessageBox.Information if success else QMessageBox.Critical)
+        msg_box.setIcon(QMessageBox.Icon.Information if success else QMessageBox.Icon.Critical)
         msg_box.exec()
 
     def add_action(
