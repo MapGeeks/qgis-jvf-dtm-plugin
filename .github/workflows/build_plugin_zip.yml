@@ -32,9 +32,10 @@ jobs:
         rm -rf docs
         cp -r site docs
 
-    - name: Build package
+    - name: Deploy & zip
       run: |
-        pb_tool zip
+        pb_tool deploy -y
+        pb_tool zip -q
 
     - name: Prepare artifact
       run: |
