@@ -37,14 +37,14 @@ jobs:
         set -e
         # Remove any previously deployed plugin to avoid interactive prompt from pb_tool deploy
         rm -rf "$HOME/.local/share/QGIS/QGIS4/profiles/default/python/plugins/qgis_jvf_dtm_plugin" || true
-        # Ensure CI-friendly sequence
+        # CI-friendly sequence
         pb_tool dclean
         pb_tool deploy
         pb_tool zip
 
     - name: Prepare artifact
       run: |
-        rm -f zip_build/*.txt || true
+        rm zip_build/*.zip zip_build/*.txt
 
     - name: Upload ZIP artifact
       uses: actions/upload-artifact@v4
