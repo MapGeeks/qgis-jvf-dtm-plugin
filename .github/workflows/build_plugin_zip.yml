@@ -35,6 +35,9 @@ jobs:
     - name: Build package
       run: |
         set -e
+        # Remove any previously deployed plugin to avoid interactive prompt from pb_tool deploy
+        rm -rf "$HOME/.local/share/QGIS/QGIS4/profiles/default/python/plugins/qgis_jvf_dtm_plugin" || true
+        # Ensure CI-friendly sequence
         pb_tool dclean
         pb_tool deploy
         pb_tool zip
