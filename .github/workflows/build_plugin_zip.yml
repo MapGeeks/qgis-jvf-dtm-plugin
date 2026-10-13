@@ -34,11 +34,14 @@ jobs:
 
     - name: Build package
       run: |
+        set -e
+        pb_tool dclean
+        pb_tool deploy
         pb_tool zip
 
     - name: Prepare artifact
       run: |
-        rm zip_build/*.zip zip_build/*.txt
+        rm -f zip_build/*.txt || true
 
     - name: Upload ZIP artifact
       uses: actions/upload-artifact@v4
