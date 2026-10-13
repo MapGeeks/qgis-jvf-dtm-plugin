@@ -34,14 +34,6 @@ jobs:
 
     - name: Build package
       run: |
-        set -e
-        # Remove any previously deployed plugin to avoid interactive prompt from pb_tool deploy
-        if [ -d "$HOME/.local/share/QGIS/QGIS4/profiles/default/python/plugins/qgis_jvf_dtm_plugin" ]; then
-          rm -rf "$HOME/.local/share/QGIS/QGIS4/profiles/default/python/plugins/qgis_jvf_dtm_plugin"
-        fi
-        # CI-friendly sequence
-        pb_tool dclean
-        pb_tool deploy
         pb_tool zip
 
     - name: Prepare artifact
