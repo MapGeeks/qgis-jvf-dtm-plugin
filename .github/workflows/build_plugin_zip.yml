@@ -41,7 +41,13 @@ jobs:
       run: |
         echo "Obsah zip_build:"
         ls -laR zip_build || echo "zip_build neexistuje"
-        rm -f zip_build/*.zip zip_build/*.txt
+        cd zip_build
+        for f in *.zip; do
+          [ -e "$f" ] || { echo "pb_tool zip nevytvořil žádný zip"; exit 1; }
+          unzip -q "$f"
+        done
+        rm -f *.zip *.txt
+        ls -laR .
 
     - name: Upload ZIP artifact
       uses: actions/upload-artifact@v4
