@@ -39,15 +39,10 @@ jobs:
 
     - name: Prepare artifact
       run: |
-        echo "Obsah zip_build:"
-        ls -laR zip_build || echo "zip_build neexistuje"
-        cd zip_build
-        for f in *.zip; do
-          [ -e "$f" ] || { echo "pb_tool zip nevytvořil žádný zip"; exit 1; }
-          unzip -q "$f"
-        done
-        rm -f *.zip *.txt
-        ls -laR .
+        rm -rf zip_build
+        mkdir -p zip_build
+        unzip -q qgis_jvf_dtm_plugin.zip -d zip_build
+        ls -laR zip_build
 
     - name: Upload ZIP artifact
       uses: actions/upload-artifact@v4
