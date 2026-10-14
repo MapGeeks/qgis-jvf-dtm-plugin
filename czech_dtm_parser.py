@@ -75,6 +75,29 @@ class ScaleRange:
     min_scale: int
     max_scale: int
 
+    @property
+    def qgis_minimum_scale(self) -> float:
+        """
+        Hodnota pro QgsRuleBasedRenderer.Rule.setMinimumScale()
+        (nejvzdálenější měřítko, tj. největší jmenovatel).
+
+        QGIS ji bere jako výlučnou (měřítko >= hodnota -> nekreslit) a při
+        vykreslování ji zaokrouhluje na celé číslo, proto max_scale + 1:
+        rozsah 0-500 platí pro všechna měřítka < 501.
+        """
+        return float(self.max_scale + 1)
+
+    @property
+    def qgis_maximum_scale(self) -> float:
+        """
+        Hodnota pro QgsRuleBasedRenderer.Rule.setMaximumScale()
+        (nejbližší měřítko, tj. nejmenší jmenovatel; 0 = bez omezení).
+
+        QGIS ji bere včetně (měřítko < hodnota -> nekreslit), takže rozsah
+        501-5000 navazuje na předchozí přesně na hodnotě 501.
+        """
+        return float(self.min_scale) if self.min_scale > 0 else 0.0
+
     def __str__(self) -> str:
         if self.min_scale == 0:
             return f"0 - 1:{self.max_scale}"
@@ -82,6 +105,10 @@ class ScaleRange:
 
 
 # Definice rozsahů měřítek
+# Hranice jsou celočíselné jmenovatele (0-500, 501-5000, ...). Skutečné měřítko
+# mapy ale není celé číslo (např. 500.0003 nebo 499.9999999986), proto se
+# pravidla v rendereru napojují na začátek dalšího rozsahu (501, 5001, ...),
+# viz ScaleRange.qgis_minimum_scale / qgis_maximum_scale.
 SCALE_RANGES = {
     "500": ScaleRange(0, 500),
     "5000": ScaleRange(501, 5000),
@@ -866,8 +893,13 @@ class CzechDTMParser:
                     symbol = self.symbol_processor.create_symbol_from_json(symbol_dict)
                     if symbol:
                         rule = QgsRuleBasedRenderer.Rule(symbol)
-                        rule.setMinimumScale(max_scale)
-                        rule.setMaximumScale(min_scale)
+                        # QGIS: minimumScale = nejvzdálenější (velký jmenovatel),
+                        # maximumScale = nejbližší (malý jmenovatel).
+                        # Rozsahy na sebe navazují bez mezery, jinak měřítko
+                        # 500.0003 nepatří do žádného pravidla a nic se nevykreslí
+                        # (ani v DXF exportu při symbologyScale 500).
+                        rule.setMinimumScale(scale_range.qgis_minimum_scale)
+                        rule.setMaximumScale(scale_range.qgis_maximum_scale)
                         rule.setLabel(meritkovy_rozsah)
                         rule.setDescription(meritkovy_rozsah)
                         rules.append(rule)
@@ -1025,4 +1057,4 @@ class CzechDTMParser:
                 # Získáme Layer ID
                 layer_id = child.layerId()
                 # Odstraníme vrstvu z projektu
-                QgsProject.instance().removeMapLayer(layer_id)
+                QgsProject.instance().removeMapLayer(layer_id)

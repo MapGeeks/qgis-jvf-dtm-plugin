@@ -24,8 +24,67 @@ from qgis.core import (
 from qgis.PyQt.QtGui import QColor
 from qgis.PyQt.QtCore import Qt, QPointF
 import logging
+import re
 
 logger = logging.getLogger(__name__)
+
+_RE_PATH_D = re.compile(r'\sd="([^"]*)"')
+_RE_TOKEN = re.compile(r'[A-Za-z]|-?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?')
+_RE_VIEWBOX = re.compile(r'viewBox="[^"]*"')
+
+# Okraj kolem kresby v jednotkách SVG (zdrojové SVG mají kresbu od 6.0)
+_SVG_OKRAJ = 6.0
+# Rozměr viewBoxu zdrojových SVG
+_SVG_MIN_VIEWBOX = 100.0
+
+
+def vycentruj_svg(svg_data: str) -> str:
+    """
+    Upraví viewBox SVG tak, aby střed kresby ležel ve středu viewBoxu.
+
+    Zdrojová SVG ve styles.csv mají viewBox "0 0 100 100", ale kresbu mimo
+    jeho střed (křížek podrobného bodu je v 6-66, čtverce v 6-206 apod.).
+    QGIS ukotvuje značku na střed viewBoxu, takže značka byla posunutá
+    vůči bodu a dřív se to obcházelo pevným offsetem 0.5 mm. Ten ale v DXF
+    exportu (osa Y je otočená) posun naopak zdvojnásobil.
+
+    Upraví se jen SVG, jejichž kresba se do viewBoxu 100 vejde (např. křížek
+    podrobného bodu): viewBox se jen posune, velikost kresby zůstane stejná.
+    SVG s kresbou větší než viewBox (čtverce 6-206 apod.) se nemění, protože
+    jejich vycentrování by změnilo i jejich velikost nebo ořez v QGIS.
+
+    Zpracuje jen cesty s absolutními příkazy M, L, Z; jinak vrátí SVG beze změny.
+    """
+    xs, ys = [], []
+    for d in _RE_PATH_D.findall(svg_data):
+        tokeny = _RE_TOKEN.findall(d)
+        cisla = []
+        for t in tokeny:
+            if t.isalpha():
+                if t not in ('M', 'L', 'Z'):
+                    return svg_data  # relativní příkazy, křivky... -> neměnit
+                if len(cisla) % 2:
+                    return svg_data
+                continue
+            cisla.append(float(t))
+        if len(cisla) % 2:
+            return svg_data
+        xs.extend(cisla[0::2])
+        ys.extend(cisla[1::2])
+
+    if not xs or not _RE_VIEWBOX.search(svg_data):
+        return svg_data
+
+    strana = _SVG_MIN_VIEWBOX
+    if (max(xs) - min(xs) + 2 * _SVG_OKRAJ > strana
+            or max(ys) - min(ys) + 2 * _SVG_OKRAJ > strana):
+        return svg_data  # kresba větší než viewBox -> ponechat
+
+    cx = (min(xs) + max(xs)) / 2.0
+    cy = (min(ys) + max(ys)) / 2.0
+    vb = f'viewBox="{cx - strana / 2:g} {cy - strana / 2:g} {strana:g} {strana:g}"'
+    return _RE_VIEWBOX.sub(vb, svg_data, count=1)
+
 
 class SymbolProcessor:
     """Třída pro zpracování a vytváření QGIS symbolů"""
@@ -122,9 +181,15 @@ class SymbolProcessor:
                 return None
 
             if layer_type == 'SvgMarker':
-                sl = layer_class(layer_def.get('svg_data', ''))
-                sl.setPath(layer_def.get('svg_data', ''))
-                sl.setOffset(QPointF(0.5, 0.5))
+                puvodni_svg = layer_def.get('svg_data', '')
+                svg = vycentruj_svg(puvodni_svg)
+                sl = layer_class(svg)
+                sl.setPath(svg)
+                if svg == puvodni_svg:
+                    # Nevycentrované SVG: původní korekce posunu kresby.
+                    # U vycentrovaných se nepoužívá - v DXF exportu (otočená
+                    # osa Y) značky naopak posouvala.
+                    sl.setOffset(QPointF(0.5, 0.5))
             else:
                 sl = layer_class()
 
@@ -208,4 +273,4 @@ class SymbolProcessor:
 
     def clear_cache(self) -> None:
         """Vyčistí cache symbolů"""
-        self._symbol_cache.clear()
+        self._symbol_cache.clear()
