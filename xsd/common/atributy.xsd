@@ -492,7 +492,7 @@
 
   <!--  Typy pro SpolecneAtributyObjektuPasemDI  -->
 
-  <xs:complexType name="SpolecneAtributyObjektuPasemDIRefType">
+  <xs:complexType name="SpolecneAtributyObjektuPasemDIRefType"> <!-- pragma: allowlist secret -->
     <xs:annotation>
       <xs:documentation>Společné atributy objektů ochranných a bezpečnostních pásem DI - kontext Ref</xs:documentation>
     </xs:annotation>
@@ -525,7 +525,7 @@
     </xs:all>
   </xs:complexType>
 
-  <xs:complexType name="SpolecneAtributyObjektuPasemDIUpdType">
+  <xs:complexType name="SpolecneAtributyObjektuPasemDIUpdType"> <!-- pragma: allowlist secret -->
     <xs:annotation>
       <xs:documentation>Společné atributy objektů ochranných a bezpečnostních pásem DI - kontext Upd</xs:documentation>
     </xs:annotation>

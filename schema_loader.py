@@ -16,7 +16,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 import logging
 from typing import Dict, Optional, List
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # nosec B405 - parsují se jen XSD schémata přibalená k pluginu
 
 from .helpers import resolve_path, load_config
 
@@ -52,7 +52,7 @@ class XSDSchemaLoader:
             ET.ParseError: Pokud dojde k chybě při parsování XML.
         """
         xsd_path = resolve_path(self.xsd_file)
-        tree = ET.parse(xsd_path)
+        tree = ET.parse(xsd_path)  # nosec B314 - XSD přibalené k pluginu, ne vstup od uživatele
         return tree.getroot()
 
     def _get_elements(self) -> List[ET.Element]:

@@ -46,7 +46,7 @@ def invertuj_symbol(symbol):
             if hasattr(sl, getter) and hasattr(sl, setter):
                 try:
                     getattr(sl, setter)(invertuj_barvu(getattr(sl, getter)()))
-                except Exception:
+                except Exception:  # nosec B110 - vrstva symbolu barvu nepodporuje, ponechá se
                     pass
         # např. marker line, centroid fill, ...
         if hasattr(sl, 'subSymbol'):
