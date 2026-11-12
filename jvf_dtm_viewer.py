@@ -106,7 +106,7 @@ class JVFDTMViewer:
 
     def initGui(self):
         """Create the menu entries and toolbar icons inside QGIS."""
-        icon_path = self.plugin_dir / "icons/iconIn.png"
+        icon_path = self.plugin_dir / "icons/iconIn.svg"
         self.add_action(
             icon_path,
             text="Open JVF DTM Viewer",
@@ -114,10 +114,10 @@ class JVFDTMViewer:
             parent=self.iface.mainWindow(),
         )
 
-        icon_path_dxf = self.plugin_dir / "icons/iconOut.png"
+        icon_path_dxf = self.plugin_dir / "icons/iconOut.svg"
         self.add_action(
             icon_path_dxf,
-            text="JVF DTM Viewer - export to DXF",
+            text="JVF DTM Viewer - export to DXF or GeoPackage",
             callback=self.run_dxf,
             parent=self.iface.mainWindow(),
         )
@@ -146,7 +146,7 @@ class JVFDTMViewer:
         # Zde už se nevypisuje žádná zpráva - zpětná vazba je zajištěna v DTMParserTask.finished
 
     def run_dxf(self) -> None:
-        """Run method that performs export to DXF"""
+        """Run method that performs export to DXF or GeoPackage"""
         filename, _ = QFileDialog.getSaveFileName(
             None, "Select Output File", "", "DXF (*.dxf);;GeoPackage (*.gpkg)"
         )

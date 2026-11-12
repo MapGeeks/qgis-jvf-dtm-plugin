@@ -346,5 +346,19 @@ Matchne se
 
 **111 zařízení plynovodní sítě - jiné_Point_500**
 
+## Definiční body a záložní klíče (od verze 2.0.0)
 
+Pro objekty, jejichž geometrie má `code_suffix="04"` (definiční bod), obsahuje soubor `styles.csv` od verze 2.0.0 vlastní styly s klíčem `_DB` místo `_Point`, např.:
 
+```
+001 budova_DB_500
+```
+
+Pro každé měřítko se styl hledá v tomto pořadí a použije se první nalezený:
+
+1. u definičních bodů klíč s `_DB` – nejdřív s charakteristickým atributem (např. `… - drátěný_DB_500`), pak s variantami „nezjištěno“ a „neurčeno“, pak bez charakteristického atributu,
+2. klíč podle geometrie (`_Point`, `_LineString`, `_Polygon`) ve stejném pořadí – s charakteristickým atributem, s variantami „nezjištěno“ a „neurčeno“ a nakonec bez charakteristického atributu (např. `162 plot_LineString_500`).
+
+Klíče s `_Point` tak slouží jako záloha pro starší `styles.csv`, který styly `_DB` nemá. Záložní klíč bez charakteristického atributu zajistí, že se objekt zobrazí obecným stylem svého typu i tehdy, když pro konkrétní hodnotu atributu styl neexistuje.
+
+Pokud se pro vrstvu nenajde styl v žádném měřítku, doplní se k jejímu názvu text **„(nenalezen styl)“**.
