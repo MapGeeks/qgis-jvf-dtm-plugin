@@ -6,7 +6,7 @@
   <xs:import schemaLocation="../ext/gml/gml.xsd"
     namespace="http://www.opengis.net/gml/3.2"/>
   <xs:element name="NadrzZdrzSeVzdouvacimObjektemDefinicniBod" type="nsvdef:NadrzZdrzSeVzdouvacimObjektemDefinicniBodType"/>
-  <xs:complexType name="NadrzZdrzSeVzdouvacimObjektemDefinicniBodType">
+  <xs:complexType name="NadrzZdrzSeVzdouvacimObjektemDefinicniBodType"> <!-- pragma: allowlist secret -->
     <xs:sequence>
       <xs:element name="ObjektovyTypNazev" fixed="nádrž, zdrž se vzdouvacím objektem">
         <xs:complexType>

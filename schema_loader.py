@@ -15,8 +15,14 @@ the Free Software Foundation, either version 3 of the License, or
 """
 
 import logging
-from typing import Dict, Optional, List
-import xml.etree.ElementTree as ET
+from typing import Any, Dict, Optional, List
+
+try:
+    from defusedxml.ElementTree import parse as parse_xml
+except ImportError:
+    # defusedxml nemusí být v Pythonu dodávaném s QGIS k dispozici. Parsuje se
+    # pouze XSD dodávané s pluginem (cesta z konfigurace), ne data od uživatele.
+    from xml.etree.ElementTree import parse as parse_xml  # nosec B405
 
 from .helpers import resolve_path, load_config
 
@@ -40,27 +46,27 @@ class XSDSchemaLoader:
                 "Path to the XSD file must be provided or defined in the configuration."
             )
 
-    def _get_root(self) -> ET.Element:
+    def _get_root(self) -> Any:
         """
         Načte a vrátí kořenový prvek XSD dokumentu.
 
         Returns:
-            ET.Element: Kořenový prvek XML stromu.
+            Element: Kořenový prvek XML stromu.
 
         Raises:
             FileNotFoundError: Pokud není XSD soubor nalezen.
-            ET.ParseError: Pokud dojde k chybě při parsování XML.
+            ParseError: Pokud dojde k chybě při parsování XML.
         """
         xsd_path = resolve_path(self.xsd_file)
-        tree = ET.parse(xsd_path)
+        tree = parse_xml(xsd_path)  # nosec B314
         return tree.getroot()
 
-    def _get_elements(self) -> List[ET.Element]:
+    def _get_elements(self) -> List[Any]:
         """
         Najde všechny elementy v XSD schématu.
 
         Returns:
-            List[ET.Element]: Seznam elementů nalezených v XSD.
+            List[Element]: Seznam elementů nalezených v XSD.
         """
         root = self._get_root()
         return root.findall(".//xs:element", {"xs": "http://www.w3.org/2001/XMLSchema"})
