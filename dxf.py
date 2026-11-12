@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 
@@ -13,6 +14,8 @@ from qgis.core import (
 from qgis.utils import iface
 from qgis.PyQt.QtGui import QColor
 import processing
+
+logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -46,8 +49,11 @@ def invertuj_symbol(symbol):
             if hasattr(sl, getter) and hasattr(sl, setter):
                 try:
                     getattr(sl, setter)(invertuj_barvu(getattr(sl, getter)()))
-                except Exception:
-                    pass
+                except Exception as e:
+                    # Některé typy symbolových vrstev mají getter/setter s jinou
+                    # signaturou - barvu takové vrstvy necháme beze změny.
+                    logger.debug("Barvu %s u vrstvy %s nelze invertovat: %s",
+                                 getter, type(sl).__name__, e)
         # např. marker line, centroid fill, ...
         if hasattr(sl, 'subSymbol'):
             invertuj_symbol(sl.subSymbol())
