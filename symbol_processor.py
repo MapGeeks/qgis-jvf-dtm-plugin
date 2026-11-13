@@ -19,6 +19,8 @@ from qgis.core import (
     Qgis, QgsSymbol, QgsLineSymbol, QgsMarkerSymbol, QgsFillSymbol,
     QgsSimpleMarkerSymbolLayer, QgsSvgMarkerSymbolLayer,
     QgsSimpleLineSymbolLayer, QgsSimpleFillSymbolLayer,
+    QgsMarkerLineSymbolLayer, QgsCentroidFillSymbolLayer,
+    QgsPointPatternFillSymbolLayer, QgsLinePatternFillSymbolLayer,
     QgsSymbolLayer
 )
 from qgis.PyQt.QtGui import QColor
@@ -36,6 +38,19 @@ _RE_VIEWBOX = re.compile(r'viewBox="[^"]*"')
 _SVG_OKRAJ = 6.0
 # Rozměr viewBoxu zdrojových SVG
 _SVG_MIN_VIEWBOX = 100.0
+# viewBox SVG z původního styles.csv (jen u nich se používá korekce posunu)
+_RE_PUVODNI_VIEWBOX = re.compile(r'viewBox="0 0 100 100"')
+
+_CAP = {'flat': Qt.PenCapStyle.FlatCap, 'butt': Qt.PenCapStyle.FlatCap,
+        'square': Qt.PenCapStyle.SquareCap, 'round': Qt.PenCapStyle.RoundCap}
+_JOIN = {'miter': Qt.PenJoinStyle.MiterJoin, 'bevel': Qt.PenJoinStyle.BevelJoin,
+         'round': Qt.PenJoinStyle.RoundJoin}
+
+
+def _offset(value: str) -> QPointF:
+    """'x,y' -> QPointF"""
+    x, y = (float(v) for v in str(value).split(','))
+    return QPointF(x, y)
 
 
 def vycentruj_svg(svg_data: str) -> str:
@@ -105,7 +120,11 @@ class SymbolProcessor:
             'SimpleMarker': QgsSimpleMarkerSymbolLayer,
             'SvgMarker': QgsSvgMarkerSymbolLayer,
             'SimpleLine': QgsSimpleLineSymbolLayer,
-            'SimpleFill': QgsSimpleFillSymbolLayer
+            'SimpleFill': QgsSimpleFillSymbolLayer,
+            'MarkerLine': QgsMarkerLineSymbolLayer,
+            'CentroidFill': QgsCentroidFillSymbolLayer,
+            'PointPatternFill': QgsPointPatternFillSymbolLayer,
+            'LinePatternFill': QgsLinePatternFillSymbolLayer,
         }
 
         self.shape_map = {
@@ -182,14 +201,38 @@ class SymbolProcessor:
 
             if layer_type == 'SvgMarker':
                 puvodni_svg = layer_def.get('svg_data', '')
-                svg = vycentruj_svg(puvodni_svg)
-                sl = layer_class(svg)
-                sl.setPath(svg)
-                if svg == puvodni_svg:
-                    # Nevycentrované SVG: původní korekce posunu kresby.
-                    # U vycentrovaných se nepoužívá - v DXF exportu (otočená
-                    # osa Y) značky naopak posouvala.
-                    sl.setOffset(QPointF(0.5, 0.5))
+                if _RE_PUVODNI_VIEWBOX.search(puvodni_svg):
+                    # SVG z původního styles.csv (kresba mimo střed viewBoxu)
+                    svg = vycentruj_svg(puvodni_svg)
+                    sl = layer_class(svg)
+                    sl.setPath(svg)
+                    if svg == puvodni_svg:
+                        # Nevycentrované SVG: původní korekce posunu kresby.
+                        # U vycentrovaných se nepoužívá - v DXF exportu (otočená
+                        # osa Y) značky naopak posouvala.
+                        sl.setOffset(QPointF(0.5, 0.5))
+                else:
+                    # SVG převedené z CIM: střed viewBoxu je kotevní bod,
+                    # velikost, natočení a posun jsou v definici vrstvy
+                    sl = layer_class(puvodni_svg)
+                    sl.setPath(puvodni_svg)
+                    if 'size' in layer_def:
+                        sl.setSize(float(layer_def['size']))
+                    if 'angle' in layer_def:
+                        sl.setAngle(float(layer_def['angle']))
+                    if 'offset' in layer_def:
+                        sl.setOffset(_offset(layer_def['offset']))
+                return sl
+            elif layer_type in ('MarkerLine', 'CentroidFill', 'PointPatternFill'):
+                return self._create_placed_marker_layer(layer_class, layer_def)
+            elif layer_type == 'LinePatternFill':
+                sl = layer_class()
+                sl.setLineAngle(float(layer_def.get('angle', 0)))
+                sl.setDistance(float(layer_def.get('distance', 5)))
+                sl.setLineWidth(float(layer_def.get('line_width', 0.26)))
+                if 'color' in layer_def:
+                    sl.setColor(QColor(*[int(x) for x in layer_def['color'].split(',')]))
+                return sl
             else:
                 sl = layer_class()
 
@@ -199,6 +242,25 @@ class SymbolProcessor:
         except Exception as e:
             logger.error(f"Error creating symbol layer: {e}")
             return None
+
+    def _create_placed_marker_layer(self, layer_class, layer_def: Dict[str, Any]) -> Optional[QgsSymbolLayer]:
+        """Značka na linii / v těžišti / vzorek bodů - podsymbol z klíče 'marker'."""
+        marker = self.create_symbol_from_json({'type': 'marker', 'layers': [layer_def['marker']]})
+        if marker is None or marker.symbolLayerCount() == 0:
+            return None
+        sl = layer_class()
+        if isinstance(sl, QgsMarkerLineSymbolLayer):
+            sl.setInterval(float(layer_def.get('interval', 3)))
+            sl.setOffsetAlongLine(float(layer_def.get('offset_along_line', 0)))
+            sl.setOffset(float(layer_def.get('offset', 0)))
+            sl.setRotateSymbols(layer_def.get('rotate', '1') == '1')
+        elif isinstance(sl, QgsCentroidFillSymbolLayer):
+            sl.setPointOnSurface(layer_def.get('point_on_surface', '0') == '1')
+        elif isinstance(sl, QgsPointPatternFillSymbolLayer):
+            sl.setDistanceX(float(layer_def.get('distance_x', 10)))
+            sl.setDistanceY(float(layer_def.get('distance_y', 10)))
+        sl.setSubSymbol(marker)
+        return sl
 
     def _set_layer_properties(self, symbol_layer: QgsSymbolLayer, properties: Dict[str, Any]) -> None:
         """
@@ -246,6 +308,12 @@ class SymbolProcessor:
         if 'outline_width' in properties:
             layer.setStrokeWidth(float(properties['outline_width']))
 
+        if 'angle' in properties:
+            layer.setAngle(float(properties['angle']))
+
+        if 'offset' in properties:
+            layer.setOffset(_offset(properties['offset']))
+
     def _set_line_properties(self, layer: QgsSimpleLineSymbolLayer, properties: Dict[str, Any]) -> None:
         """Nastaví vlastnosti liniového symbolu"""
         if 'width' in properties:
@@ -259,6 +327,15 @@ class SymbolProcessor:
             layer.setCustomDashVector(pattern)
             layer.setUseCustomDashPattern(True)
 
+        if 'pen_cap_style' in properties and properties['pen_cap_style'] in _CAP:
+            layer.setPenCapStyle(_CAP[properties['pen_cap_style']])
+
+        if 'pen_join_style' in properties and properties['pen_join_style'] in _JOIN:
+            layer.setPenJoinStyle(_JOIN[properties['pen_join_style']])
+
+        if 'offset' in properties:
+            layer.setOffset(float(properties['offset']))
+
     def _set_fill_properties(self, layer: QgsSimpleFillSymbolLayer, properties: Dict[str, Any]) -> None:
         """Nastaví vlastnosti výplňového symbolu"""
         if 'outline_color' in properties:
@@ -270,6 +347,9 @@ class SymbolProcessor:
         
         if 'style' in properties:
             layer.setBrushStyle(Qt.BrushStyle.SolidPattern)
+
+        if properties.get('outline_style') == 'no':
+            layer.setStrokeStyle(Qt.PenStyle.NoPen)
 
     def clear_cache(self) -> None:
         """Vyčistí cache symbolů"""

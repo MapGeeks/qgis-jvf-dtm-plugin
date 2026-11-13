@@ -25,7 +25,7 @@
           </xs:annotation>
             <xs:complexType>
               <xs:sequence>
-                <xs:any maxOccurs="unbounded" processContents="lax"/>
+                <xs:any processContents="lax" maxOccurs="unbounded"/>
               </xs:sequence>
             </xs:complexType>
         </xs:element>

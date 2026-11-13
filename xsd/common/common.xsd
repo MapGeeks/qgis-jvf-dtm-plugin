@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-  targetNamespace="cmn" xmlns="cmn">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:gml="http://www.opengis.net/gml/3.2" targetNamespace="cmn" xmlns="cmn">
+  <xs:import schemaLocation="../ext/gml/gml.xsd" namespace="http://www.opengis.net/gml/3.2"/>
   <xs:element name="VerzeJVFDTM">
     <xs:annotation>
       <xs:documentation>Verze JVF DTM</xs:documentation>
     </xs:annotation>
     <xs:simpleType>
       <xs:restriction base="xs:string">
-        <xs:enumeration value="1.4.3"/>
+        <xs:enumeration value="1.5.0.2"/>
       </xs:restriction>
     </xs:simpleType>
-  </xs:element>  
+  </xs:element>
+
   <xs:element name="DatumZapisu" type="xs:dateTime">
     <xs:annotation>
       <xs:documentation>Datum a čas vytvoření souboru</xs:documentation>
     </xs:annotation>
   </xs:element>
+
   <xs:element name="TypZapisu">
     <xs:annotation>
       <xs:documentation>Typ zápisu</xs:documentation>
@@ -28,18 +30,109 @@
     </xs:simpleType>
   </xs:element>
 
-  <xs:element name="ZapisObjektu">
+  <!-- Geometrie objektů  -->
+
+  <xs:complexType name="GeometrieObjektuBod2DType">
+    <xs:sequence>
+      <xs:element name="Bod2D">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gml:pointProperty"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GeometrieObjektuBod3DType">
+    <xs:sequence>
+      <xs:element name="Bod3D">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gml:pointProperty"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GeometrieObjektuLinie2DType">
+    <xs:sequence>
+      <xs:element name="Linie2D">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gml:curveProperty"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GeometrieObjektuLinie3DType">
+    <xs:sequence>
+      <xs:element name="Linie3D">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gml:curveProperty"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GeometrieObjektuPlocha2DDTIType">
     <xs:annotation>
-      <xs:documentation>Způsob zápisu objektu: i - insert, u - update, d - delete, r - reference</xs:documentation>
+      <xs:documentation>2D geometrie pro plochu DTI</xs:documentation>
     </xs:annotation>
-    <xs:simpleType>
-      <xs:restriction base="xs:string">
-        <xs:enumeration value="i"/>
-        <xs:enumeration value="u"/>
-        <xs:enumeration value="d"/>
-        <xs:enumeration value="r"/>
-        <xs:length value="1"/>
-      </xs:restriction>
-    </xs:simpleType>
-  </xs:element>
+    <xs:sequence>
+      <xs:element name="Plocha2D">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gml:surfaceProperty"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GeometrieObjektuPlocha3DDTIType">
+    <xs:annotation>
+      <xs:documentation>3D geometrie pro plochu DTI</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Plocha3D">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gml:surfaceProperty"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GeometrieObjektuPlochaZPSType">
+    <xs:sequence>
+      <xs:element name="Plocha2D">
+        <xs:annotation>
+          <xs:documentation>2D geometrie pro plochu ZPS</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gml:Polygon"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Obvod3D">
+        <xs:annotation>
+          <xs:documentation>3D geometrie pro obvod ZPS</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="gml:LineString" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
 </xs:schema>

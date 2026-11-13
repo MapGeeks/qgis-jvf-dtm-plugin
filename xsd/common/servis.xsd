@@ -1,63 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-  targetNamespace="servis" xmlns="servis">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" elementFormDefault="qualified" targetNamespace="servis" xmlns="servis">
+  <xs:import schemaLocation="../ext/gml/gml.xsd" namespace="http://www.opengis.net/gml/3.2"/>
   <xs:element name="ServisJVFDTM">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element name="RelaceIDObjektu" minOccurs="0">
-          <xs:annotation>
-            <xs:documentation>Vztah mezi ID objektů u VSP a v DTMK</xs:documentation>
-          </xs:annotation>
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="VerzeRelace" type="xs:string" fixed="1.0"/>
-              <xs:element name="DatumRelace" type="xs:date"/>
-              <xs:element name="IDRelace" type="xs:string" minOccurs="0"/>
-              <xs:element name="SeznamIDObjektu">
-                <xs:annotation>
-                  <xs:documentation>Seznam dvojic ID objektů</xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="IDObjektu" maxOccurs="unbounded">
-                      <xs:complexType>
-                        <xs:all>
-                          <xs:element name="IDExterni" type="xs:string"/>
-                          <xs:element name="ID" type="xs:string"/>
-                        </xs:all>
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                </xs:complexType>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
+      <xs:choice>
+        <xs:element ref="RelaceIDObjektu"/>
+        <xs:element ref="RelaceIDObjektuZPS"/>
+        <xs:element ref="ProtokolChyb"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
 
-        <xs:element name="RelaceIDObjektuZPS" minOccurs="0">
+  <xs:element name="RelaceIDObjektu">
+    <xs:annotation>
+      <xs:documentation>Vztah mezi ID objektů u VSP a v DTMK</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="VerzeRelace" type="xs:string" fixed="1.0"/>
+        <xs:element name="DatumRelace" type="xs:date"/>
+        <xs:element name="IDRelace" type="xs:string" minOccurs="0"/>
+        <xs:element name="SeznamIDObjektu">
           <xs:annotation>
-            <xs:documentation>Vztah mezi ID objektů u přeshraniční editace ZPS</xs:documentation>
+            <xs:documentation>Seznam dvojic ID objektů</xs:documentation>
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="VerzeRelaceZPS" type="xs:string" fixed="1.0"/>
-              <xs:element name="DatumRelaceZPS" type="xs:date"/>
-              <xs:element name="IDPozadavku" type="xs:string" minOccurs="0"/>
-              <xs:element name="SeznamIDObjektuZPS">
-                <xs:annotation>
-                  <xs:documentation>Seznam dvojic ID objektů u přeshraniční editace ZPS</xs:documentation>
-                </xs:annotation>
+              <xs:element name="IDObjektu" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="IDObjektuZPS" maxOccurs="unbounded">
-                      <xs:complexType>
-                        <xs:all>
-                          <xs:element name="IDDocasne" type="xs:string"/>
-                          <xs:element name="ID" type="xs:string"/>
-                        </xs:all>
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
+                  <xs:all>
+                    <xs:element name="IDExterni" type="xs:string"/>
+                    <xs:element name="ID" type="xs:string"/>
+                  </xs:all>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
@@ -66,5 +40,249 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+
+  <xs:element name="RelaceIDObjektuZPS">
+    <xs:annotation>
+      <xs:documentation>Vztah mezi ID objektů u přeshraniční editace ZPS</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="VerzeRelaceZPS" type="xs:string" fixed="1.0"/>
+        <xs:element name="DatumRelaceZPS" type="xs:date"/>
+        <xs:element name="IDPozadavku" type="xs:string" minOccurs="0"/>
+        <xs:element name="SeznamIDObjektuZPS" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Seznam dvojic ID objektů u přeshraniční editace ZPS</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="IDObjektuZPS" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="IDDocasne" type="xs:string"/>
+                    <xs:element name="ID" type="xs:string"/>
+                  </xs:all>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ProtokolChyb">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ProtokolChybDTI" type="ProtokolChybType" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="ProtokolChybZPS" type="ProtokolChybType" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ProtokolChybType">
+    <xs:sequence>
+      <xs:element name="IDZmeny" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Identifikace změnového požadavku</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IDPozadavku" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Interní identifikace řízení IS, který vyhotovil kontrolu</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Kontroly">
+        <xs:annotation>
+          <xs:documentation>Seznam provedených kontrol</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Kontrola" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="IDBehuKontroly" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>Unikátní identifikátor běhu kontroly</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="Skupina">
+                    <xs:annotation>
+                      <xs:documentation>Skupina kontroly</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="JVF">
+                          <xs:annotation>
+                            <xs:documentation>jednotný výměnný formát</xs:documentation>
+                          </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="ATR">
+                          <xs:annotation>
+                            <xs:documentation>atributové kontroly</xs:documentation>
+                          </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="TOP">
+                          <xs:annotation>
+                            <xs:documentation>topologické kontroly</xs:documentation>
+                          </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="PLO">
+                          <xs:annotation>
+                            <xs:documentation>plošné kontroly</xs:documentation>
+                          </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="OST">
+                          <xs:annotation>
+                            <xs:documentation>ostatní kontroly</xs:documentation>
+                          </xs:annotation>
+                        </xs:enumeration>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="KodKontroly" type="xs:string">
+                    <xs:annotation>
+                      <xs:documentation>Kód kontroly (vazba na číselník typů kontrol)</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="DatumKontrolyZacatek" type="xs:dateTime">
+                    <xs:annotation>
+                      <xs:documentation>Datum a čas zahájení běhu kontroly</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="DatumKontrolyKonec" type="xs:dateTime">
+                    <xs:annotation>
+                      <xs:documentation>Datum a čas dokončení běhu kontroly</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="StavKontrola">
+                    <xs:annotation>
+                      <xs:documentation>Výsledný stav běhu kontroly</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                      <xs:restriction base="xs:integer">
+                        <xs:enumeration value="2">
+                          <xs:annotation>
+                            <xs:documentation>chyba</xs:documentation>
+                          </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="1">
+                          <xs:annotation>
+                            <xs:documentation>varování</xs:documentation>
+                          </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="0">
+                          <xs:annotation>
+                            <xs:documentation>bez chyby</xs:documentation>
+                          </xs:annotation>
+                        </xs:enumeration>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="SeznamChyb">
+                    <xs:annotation>
+                      <xs:documentation>Seznam výsledků kontroly</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Chyba" maxOccurs="unbounded" minOccurs="0">
+                          <xs:annotation>
+                            <xs:documentation>Výsledek nalezené chyby</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element name="StavChyba">
+                                <xs:annotation>
+                                  <xs:documentation>Chyba nebo varování</xs:documentation>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                  <xs:restriction base="xs:integer">
+                                    <xs:enumeration value="2">
+                                      <xs:annotation>
+                                        <xs:documentation>chyba</xs:documentation>
+                                      </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="1">
+                                      <xs:annotation>
+                                        <xs:documentation>varování</xs:documentation>
+                                      </xs:annotation>
+                                    </xs:enumeration>
+                                  </xs:restriction>
+                                </xs:simpleType>
+                              </xs:element>
+                              <xs:element name="PopisChyby" type="xs:string">
+                                <xs:annotation>
+                                  <xs:documentation>Detailní popis chyby</xs:documentation>
+                                </xs:annotation>
+                              </xs:element>
+                              <xs:element name="IDObjekt" type="xs:string" minOccurs="0">
+                                <xs:annotation>
+                                  <xs:documentation>ID objektu</xs:documentation>
+                                  <xs:documentation>Určení chybového prvku, kterému již ID objektu přidělil IS DTM</xs:documentation>
+                                </xs:annotation>
+                              </xs:element>
+                              <xs:element name="IDExterni" type="xs:string" minOccurs="0">
+                                <xs:annotation>
+                                  <xs:documentation>Id objektu z IS VSP</xs:documentation>
+                                  <xs:documentation>Určení chybového prvku DTI podle ID v externím systému VSP</xs:documentation>
+                                </xs:annotation>
+                              </xs:element>
+                              <xs:element name="GmlID" type="xs:string" minOccurs="0">
+                                <xs:annotation>
+                                  <xs:documentation>GML_ID objektu</xs:documentation>
+                                  <xs:documentation>Určení chybového prvku podle ID geometrie</xs:documentation>
+                                </xs:annotation>
+                              </xs:element>
+                              <xs:element name="LokalizaceChyby" minOccurs="0">
+                                <xs:annotation>
+                                  <xs:documentation>Lokalizace chyby (pouze v případě, pokud je možné z charakteru kontroly určit)</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:choice>
+                                    <xs:element name="Bod">
+                                      <xs:annotation>
+                                        <xs:documentation>Bodová geometrie chyby</xs:documentation>
+                                      </xs:annotation>
+                                      <xs:complexType>
+                                        <xs:sequence>
+                                          <xs:element ref="gml:pointProperty"/>
+                                        </xs:sequence>
+                                      </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="Linie">
+                                      <xs:annotation>
+                                        <xs:documentation>Liniová geometrie chyby</xs:documentation>
+                                      </xs:annotation>
+                                      <xs:complexType>
+                                        <xs:sequence>
+                                          <xs:element ref="gml:curveProperty"/>
+                                        </xs:sequence>
+                                      </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="Plocha">
+                                      <xs:annotation>
+                                        <xs:documentation>Plošná geometrie chyby</xs:documentation>
+                                      </xs:annotation>
+                                      <xs:complexType>
+                                        <xs:sequence>
+                                          <xs:element ref="gml:surfaceProperty"/>
+                                        </xs:sequence>
+                                      </xs:complexType>
+                                    </xs:element>
+                                  </xs:choice>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>
- 

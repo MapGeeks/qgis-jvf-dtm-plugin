@@ -334,11 +334,29 @@ class CzechDTMParser:
         groups = self._create_group_structure(data_obj)
 
         # Zpracování záznamů
-        records = data_obj.findall("x:ZaznamyObjektu/x:ZaznamObjektu", NAMESPACES)
+        records = self._find_records(data_obj)
         if not records:
             return 0
 
         return self._process_records(records, obj_type, code_num, config_type, groups)
+
+    @staticmethod
+    def _find_records(data_obj: ET.Element) -> List[ET.Element]:
+        """
+        Záznamy objektu z ZaznamyObjektu.
+
+        JVF DTM do 1.4.x: element ZaznamObjektu (typ zápisu v cmn:ZapisObjektu).
+        JVF DTM 1.5: substituční skupina ZaznamObjektu - konkrétní elementy
+        ZaznamObjektuIns, ZaznamObjektuUpd, ZaznamObjektuRefV, ZaznamObjektuRefNIns,
+        ZaznamObjektuPeUpd ... Záznamy o výmazu (...Del) se nezobrazují.
+        """
+        records = []
+        for zaznamy in data_obj.findall("x:ZaznamyObjektu", NAMESPACES):
+            for child in zaznamy:
+                tag = child.tag.split("}")[-1]
+                if tag.startswith("ZaznamObjektu") and not tag.endswith("Del"):
+                    records.append(child)
+        return records
 
     def _process_records(
         self,
@@ -567,9 +585,16 @@ class CzechDTMParser:
 
         layer_name = f"{base_layer_name1}_{config_type}"
 
-        scale_layer = self._create_scale_layer(
-            base_layer_name, base_layer_name2, layer_name, data
-        )
+        # Definiční body mají ve stylech vlastní klíče "..._DB_<měřítko>";
+        # starší styles.csv je nemá, proto záložně klíče podle geometrie (Point).
+        styl_nazvy = [(base_layer_name, base_layer_name2)]
+        if config_type == "DB":
+            styl_nazvy.insert(
+                0,
+                (f"{code_num} {obj_type.text}_DB", base_layer_name1 + "_DB"),
+            )
+
+        scale_layer = self._create_scale_layer(styl_nazvy, layer_name, data)
 
         # base_layer_name2 = base_layer_name + "_" + data['geom_type']
 
@@ -609,7 +634,7 @@ class CzechDTMParser:
         return layer
 
     def _create_scale_layer(
-        self, base_name: str, base_name2: str, layer_name: str, data: dict
+        self, styl_nazvy: List[Tuple[str, str]], layer_name: str, data: dict
     ) -> Optional[QgsVectorLayer]:
         """
         Vytvoření vrstvy pro měřítkové styly.
@@ -626,7 +651,7 @@ class CzechDTMParser:
         # print(f"Scale layer feature count after adding: {scale_layer.featureCount()}")
 
         # Nastavíme renderer před vrácením vrstvy
-        renderer = self._create_scale_based_renderer(scale_layer, base_name, base_name2)
+        renderer = self._create_scale_based_renderer(scale_layer, styl_nazvy)
         if renderer:
             # print(f"Created renderer with {len(renderer.rootRule().children())} rules")
             scale_layer.setRenderer(renderer)
@@ -668,7 +693,7 @@ class CzechDTMParser:
 
         if second_geom_layer:
             if second_geom_layer.featureCount() > 0:
-                self.temp_layers.append((second_geom_layer, parent_path, False))
+                self.temp_layers.append((second_geom_layer, parent_path, True))
             else:
                 logger.warning(
                     f"Druhá geometrická vrstva {second_geom_layer.name()} nemá žádné prvky - nebude přidána"
@@ -796,26 +821,35 @@ class CzechDTMParser:
 
         return f"{base_name}"
 
-    def _create_scale_based_renderer(
-        self, layer: QgsVectorLayer, base_layer_name: str, base_layer_name2: str
-    ) -> QgsRuleBasedRenderer:
-        """Vytvoří renderer s pravidly pro různá měřítka"""
-        # print(f"\nCreating renderer for layer: {layer.name()}")
-        # print(f"Base layer name: {base_layer_name}")
+    def _najdi_styl(
+        self, base_layer_name: str, base_layer_name2: str, scale
+    ) -> Optional[str]:
+        """
+        Najde JSON symbolu pro měřítko. Zkouší klíč s typem, varianty
+        "nezjištěno"/"neurčeno" a nakonec klíč bez typu.
+        """
+        cache = self.style_manager._style_cache
+        style_key = f"{base_layer_name2}_{scale}"
+        klice = [style_key]
+        if "nezjištěno/neurčeno" in style_key:
+            klice.append(style_key.replace("nezjištěno/neurčeno", "nezjištěno"))
+            klice.append(style_key.replace("nezjištěno/neurčeno", "neurčeno"))
+        klice.append(f"{base_layer_name}_{scale}")
+        for klic in klice:
+            if klic in cache:
+                return cache[klic]
+        return None
 
-        # Získáme typ geometrie z vrstvy
-        """        geom_type = {
-                0: "Point",         # QgsWkbTypes.Point
-                1: "LineString",    # QgsWkbTypes.Line
-                2: "Polygon"        # QgsWkbTypes.Polygon
-            }.get(layer.geometryType())
-            
-        if not geom_type:
-            print(f"Unknown geometry type: {layer.geometryType()}")
-            return None
+    def _create_scale_based_renderer(
+        self, layer: QgsVectorLayer, styl_nazvy: List[Tuple[str, str]]
+    ) -> QgsRuleBasedRenderer:
+        """
+        Vytvoří renderer s pravidly pro různá měřítka.
+
+        styl_nazvy: dvojice (název bez typu, název s typem) v pořadí, v jakém
+        se mají hledat (u definičních bodů nejdřív "_DB", pak "_Point").
         """
         rules = []
-        # print("\n")
 
         for scale, scale_range in SCALE_RANGES.items():
             min_scale = scale_range.min_scale
@@ -827,67 +861,17 @@ class CzechDTMParser:
             else:
                 meritkovy_rozsah = f"1:{min_scale} - 1:{max_scale}"
 
-            # Přidáme typ geometrie do klíče
-            style_key = f"{base_layer_name2}_{scale}"
-            # print(f"Looking for style with key 1: {style_key}")
-
-            style_found = False
-            if style_key in self.style_manager.style_df["key"].values:
-                # print(f"Found direct match for style: {style_key}")
-                style_row = self.style_manager.style_df[
-                    self.style_manager.style_df["key"] == style_key
-                ].iloc[0]
-                style_found = True
-            else:
-                # Pokud obsahuje "nezjištěno/neurčeno", zkusíme varianty
-                if "nezjištěno/neurčeno" in style_key:
-                    # Zkusíme variantu s "nezjištěno"
-                    style_key_nezjisteno = style_key.replace(
-                        "nezjištěno/neurčeno", "nezjištěno"
-                    )
-                    # print(f"Looking for style with key 2: {style_key_nezjisteno}")
-                    if (
-                        style_key_nezjisteno
-                        in self.style_manager.style_df["key"].values
-                    ):
-                        style_row = self.style_manager.style_df[
-                            self.style_manager.style_df["key"] == style_key_nezjisteno
-                        ].iloc[0]
-                        style_found = True
-                    else:
-                        # Zkusíme variantu s "neurčeno"
-                        style_key_neurceno = style_key.replace(
-                            "nezjištěno/neurčeno", "neurčeno"
-                        )
-                        # print(f"Looking for style with key 3: {style_key_neurceno}")
-
-                        if (
-                            style_key_neurceno
-                            in self.style_manager.style_df["key"].values
-                        ):
-                            style_row = self.style_manager.style_df[
-                                self.style_manager.style_df["key"] == style_key_neurceno
-                            ].iloc[0]
-                            style_found = True
-
-                # Pokud stále nemáme styl, zkusíme verzi bez typu
-                if not style_found:
-
-                    style_key_without_type = f"{base_layer_name}_{scale}"
-                    # print(f"Looking for style with key 4: {style_key_without_type}")
-
-                    if (
-                        style_key_without_type
-                        in self.style_manager.style_df["key"].values
-                    ):
-                        style_row = self.style_manager.style_df[
-                            self.style_manager.style_df["key"] == style_key_without_type
-                        ].iloc[0]
-                        style_found = True
+            qgis_symbol_json = None
+            for base_layer_name, base_layer_name2 in styl_nazvy:
+                qgis_symbol_json = self._najdi_styl(
+                    base_layer_name, base_layer_name2, scale
+                )
+                if qgis_symbol_json:
+                    break
+            style_found = qgis_symbol_json is not None
 
             if style_found:
                 # print(f"Creating rule for scale {scale}")
-                qgis_symbol_json = style_row.get("qgis_symbol")
                 if qgis_symbol_json:
                     symbol_dict = json.loads(qgis_symbol_json)
                     symbol = self.symbol_processor.create_symbol_from_json(symbol_dict)
@@ -1057,4 +1041,4 @@ class CzechDTMParser:
                 # Získáme Layer ID
                 layer_id = child.layerId()
                 # Odstraníme vrstvu z projektu
-                QgsProject.instance().removeMapLayer(layer_id)
+                QgsProject.instance().removeMapLayer(layer_id)
